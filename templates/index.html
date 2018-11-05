@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>电影问答系统</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+</head>
+<body>
+    <p>question:</p>
+    <input type="text" id="question"size="30">
+
+    <button id="query">获取答案</button><br>
+    答案：<p id="answer">答案显示区</p>
+{#    调试信息：<p id="debug">调试信息显示区</p>#}
+{##}
+{#<br>#}
+{#    <button id="getcount">获取数量</button><br>#}
+{#    <p id="count">这里显示数量</p>#}
+{##}
+{#<br>#}
+{#    <input type="text" id="movie_id" size="30" placeholder="输入movieid查询">#}
+{#    <button id="getinfo">查movie信息</button><br>#}
+{#    演员：<p id="actor"></p>#}
+{#    导演：<p id="director"></p>#}
+{#    种类：<p id="genre"></p>#}
+{#    语言：<p id="language"></p>#}
+{#    上映国家：<p id="country"></p>#}
+
+
+
+</body>
+<script>
+    $('#query').click(
+        function(){
+             var url = "/auto_answer_for_movie/query/" ;
+             var question = $('#question').val();
+             $.ajax({
+                 type: "post",
+                 url: url,
+                 dataType: 'json',
+                 data: JSON.stringify({
+                     question: question
+                 }),
+                 success: function(result){
+                     $('#answer').text(result.data);
+{#                     $('#debug').text(JSON.stringify(result));#}
+                }
+        });
+        }
+    );
+
+{#      $('#getcount').click(#}
+{#        function(){#}
+{#             var url = "/auto_answer_for_movie/debug/count" ;#}
+{#             $.ajax({#}
+{#                 type: "get",#}
+{#                 url: url,#}
+{#                 dataType: 'json',#}
+{#                 success: function(result){#}
+{#                     $('#count').text(JSON.stringify(result));#}
+{#                }#}
+{#        });#}
+{#        }#}
+{#    )#}
+
+
+{#    $('#getinfo').click(#}
+{#        function(){#}
+{#             var url = "/auto_answer_for_movie/debug/info/" ;#}
+{#             var movie_id = $('#movie_id').val();#}
+{#             $.ajax({#}
+{#                 type: "post",#}
+{#                 url: url,#}
+{#                 dataType: 'json',#}
+{#                 data: JSON.stringify({#}
+{#                     movie_id: movie_id#}
+{#                 }),#}
+{#                 success: function(result){#}
+{##}
+{#                     actor= result['actor']+'\n';#}
+{#                     director=result['director']+'\n';#}
+{#                     genre=result['genre']+'\n';#}
+{#                     country=result['country']+'\n';#}
+{#                     language=result['language']+'\n';#}
+{#                     $('#actor').text(actor);#}
+{#                     $('#director').text(director);#}
+{#                     $('#genre').text(genre);#}
+{#                     $('#country').text(country);#}
+{#                     $('#language').text(language);#}
+{#                }#}
+{#        });#}
+{#        }#}
+{#    )#}
+</script>
+</html>

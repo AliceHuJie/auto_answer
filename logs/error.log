@@ -1,0 +1,611 @@
+2018-06-06 15:07:38,237 [logger:django.request] [exception:handle_uncaught_exception:135] [ERROR]- Internal Server Error: /auto_answer_for_movie/debug/count
+Traceback (most recent call last):
+  File "F:\python\python\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "F:\python\python\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\main\debug.py", line 18, in get_count
+    mysql_cursor.execute(sql)
+  File "F:\python\python\lib\site-packages\pymysql\cursors.py", line 165, in execute
+    result = self._query(query)
+  File "F:\python\python\lib\site-packages\pymysql\cursors.py", line 321, in _query
+    conn.query(q)
+  File "F:\python\python\lib\site-packages\pymysql\connections.py", line 860, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "F:\python\python\lib\site-packages\pymysql\connections.py", line 1061, in _read_query_result
+    result.read()
+  File "F:\python\python\lib\site-packages\pymysql\connections.py", line 1349, in read
+    first_packet = self.connection._read_packet()
+  File "F:\python\python\lib\site-packages\pymysql\connections.py", line 1018, in _read_packet
+    packet.check_error()
+  File "F:\python\python\lib\site-packages\pymysql\connections.py", line 384, in check_error
+    err.raise_mysql_exception(self._data)
+  File "F:\python\python\lib\site-packages\pymysql\err.py", line 107, in raise_mysql_exception
+    raise errorclass(errno, errval)
+ProgrammingError: (1146, u"Table 'anto_answer_for_movie.director_china' doesn't exist")
+2018-06-06 15:07:38,382 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/debug/count HTTP/1.1" 500 18015
+2018-06-26 17:33:10,904 [logger:django.request] [exception:handle_uncaught_exception:135] [ERROR]- Internal Server Error: /auto_answer_for_movie/query/
+Traceback (most recent call last):
+  File "F:\python\python\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "F:\python\python\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python\lib\site-packages\django\views\decorators\csrf.py", line 58, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\main\query.py", line 31, in get_query
+    response['data'] = get_answer(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\query_main.py", line 12, in get_answer
+    q2s = Question2Sparql(['./external_dict/movie_title.txt', './external_dict/person_name.txt'])
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\question2sparql.py", line 13, in __init__
+    self.tw = word_tagging.Tagger(dict_paths)
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\word_tagging.py", line 20, in __init__
+    jieba.load_userdict(p)
+  File "F:\python\python\lib\site-packages\jieba\__init__.py", line 374, in load_userdict
+    f = open(f, 'rb')
+IOError: [Errno 2] No such file or directory: './external_dict/movie_title.txt'
+2018-06-26 17:33:11,315 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query/ HTTP/1.1" 500 17782
+2018-06-26 17:36:05,904 [logger:django.request] [exception:handle_uncaught_exception:135] [ERROR]- Internal Server Error: /auto_answer_for_movie/query/
+Traceback (most recent call last):
+  File "F:\python\python\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "F:\python\python\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python\lib\site-packages\django\views\decorators\csrf.py", line 58, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\main\query.py", line 31, in get_query
+    response['data'] = get_answer(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\query_main.py", line 12, in get_answer
+    q2s = Question2Sparql(['./external_dict/movie_title.txt', './external_dict/person_name.txt'])
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\question2sparql.py", line 13, in __init__
+    self.tw = word_tagging.Tagger(dict_paths)
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\word_tagging.py", line 20, in __init__
+    jieba.load_userdict(p)
+  File "F:\python\python\lib\site-packages\jieba\__init__.py", line 374, in load_userdict
+    f = open(f, 'rb')
+IOError: [Errno 2] No such file or directory: './external_dict/movie_title.txt'
+2018-06-26 17:36:05,947 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query/ HTTP/1.1" 500 17782
+2018-06-26 17:43:02,144 [logger:django.request] [exception:handle_uncaught_exception:135] [ERROR]- Internal Server Error: /auto_answer_for_movie/query/
+Traceback (most recent call last):
+  File "F:\python\python\lib\site-packages\django\core\handlers\exception.py", line 41, in inner
+    response = get_response(request)
+  File "F:\python\python\lib\site-packages\django\core\handlers\base.py", line 187, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python\lib\site-packages\django\core\handlers\base.py", line 185, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python\lib\site-packages\django\views\decorators\csrf.py", line 58, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\main\query.py", line 31, in get_query
+    response['data'] = get_answer(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\query_main.py", line 13, in get_answer
+    q2s = Question2Sparql(['F:\\bsworkspace\\server\\auto_answer_for_movie\\KB_query\\external_dict', 'F:\\bsworkspace\\server\\auto_answer_for_movie\\KB_query\\external_dict'])
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\question2sparql.py", line 13, in __init__
+    self.tw = word_tagging.Tagger(dict_paths)
+  File "F:\bsworkspace\server\auto_answer_for_movie\KB_query\word_tagging.py", line 20, in __init__
+    jieba.load_userdict(p)
+  File "F:\python\python\lib\site-packages\jieba\__init__.py", line 374, in load_userdict
+    f = open(f, 'rb')
+IOError: [Errno 13] Permission denied: 'F:\\bsworkspace\\server\\auto_answer_for_movie\\KB_query\\external_dict'
+2018-06-26 17:43:02,223 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query/ HTTP/1.1" 500 17928
+2018-11-02 20:34:47,881 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query/
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 42, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 68, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 20:34:47,901 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query/ HTTP/1.1" 500 18694
+2018-11-02 20:39:28,900 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query/
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 42, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 68, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 20:39:28,920 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query/ HTTP/1.1" 500 18694
+2018-11-02 20:41:05,773 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query/
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 41, in query
+    logger.info('question:' + question.decode('utf-8'))  # 记录用户提过的问题
+AttributeError: 'str' object has no attribute 'decode'
+2018-11-02 20:41:05,793 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query/ HTTP/1.1" 500 16866
+2018-11-02 20:42:40,793 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query/
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 42, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 68, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 20:42:40,813 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query/ HTTP/1.1" 500 18694
+2018-11-02 21:01:26,353 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 40, in query
+    question = get_question(request)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 34, in get_question
+    params = json.loads(request.body)
+  File "F:\python\python3\lib\json\__init__.py", line 354, in loads
+    return _default_decoder.decode(s)
+  File "F:\python\python3\lib\json\decoder.py", line 339, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "F:\python\python3\lib\json\decoder.py", line 357, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2018-11-02 21:01:26,361 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query HTTP/1.1" 500 93121
+2018-11-02 21:02:30,650 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 40, in query
+    question = get_question(request)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 34, in get_question
+    params = json.loads(request.body)
+  File "F:\python\python3\lib\json\__init__.py", line 354, in loads
+    return _default_decoder.decode(s)
+  File "F:\python\python3\lib\json\decoder.py", line 339, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "F:\python\python3\lib\json\decoder.py", line 357, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2018-11-02 21:02:30,681 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query HTTP/1.1" 500 93121
+2018-11-02 21:02:45,151 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 40, in query
+    question = get_question(request)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 34, in get_question
+    params = json.loads(request.body)
+  File "F:\python\python3\lib\json\__init__.py", line 354, in loads
+    return _default_decoder.decode(s)
+  File "F:\python\python3\lib\json\decoder.py", line 339, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+  File "F:\python\python3\lib\json\decoder.py", line 357, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2018-11-02 21:02:45,161 [logger:django.server] [basehttp:log_message:124] [ERROR]- "POST /auto_answer_for_movie/query HTTP/1.1" 500 93136
+2018-11-02 21:05:56,439 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 42, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 68, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 21:05:56,445 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 123144
+2018-11-02 21:06:38,880 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 42, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 68, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 21:06:38,897 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 123069
+2018-11-02 21:08:42,751 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 42, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 68, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 21:08:42,776 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 123204
+2018-11-02 21:08:49,329 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 42, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 68, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 21:08:49,380 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 123144
+2018-11-02 21:12:34,079 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 43, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 68, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 21:17:00,209 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 43, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 70, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-02 21:17:00,220 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 124691
+2018-11-05 15:07:34,930 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 125, in _get_response
+    except Exception as e:
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 43, in query
+    sparql = q2s.get_sparql(question)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 53, in get_sparql
+    label = self.predict(words_list)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\question2sparql.py", line 70, in predict
+    label = self.model.predict_classes(data).astype('int')
+  File "F:\python\python3\lib\site-packages\keras\engine\sequential.py", line 267, in predict_classes
+    proba = self.predict(x, batch_size=batch_size, verbose=verbose)
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 1164, in predict
+    self._make_predict_function()
+  File "F:\python\python3\lib\site-packages\keras\engine\training.py", line 554, in _make_predict_function
+    **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2744, in function
+    return Function(inputs, outputs, updates=updates, **kwargs)
+  File "F:\python\python3\lib\site-packages\keras\backend\tensorflow_backend.py", line 2546, in __init__
+    with tf.control_dependencies(self.outputs):
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4746, in control_dependencies
+    return get_default_graph().control_dependencies(control_inputs)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 4446, in control_dependencies
+    c = self.as_graph_element(c)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3459, in as_graph_element
+    return self._as_graph_element_locked(obj, allow_tensor, allow_operation)
+  File "F:\python\python3\lib\site-packages\tensorflow\python\framework\ops.py", line 3538, in _as_graph_element_locked
+    raise ValueError("Tensor %s is not an element of this graph." % obj)
+ValueError: Tensor Tensor("dense_2/Softmax:0", shape=(?, 15), dtype=float32) is not an element of this graph.
+2018-11-05 15:07:34,942 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 124652
+2018-11-05 15:31:11,232 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\SPARQLWrapper\Wrapper.py", line 766, in _query
+    response = urlopener(request)
+  File "F:\python\python3\lib\urllib\request.py", line 223, in urlopen
+    return opener.open(url, data, timeout)
+  File "F:\python\python3\lib\urllib\request.py", line 532, in open
+    response = meth(req, response)
+  File "F:\python\python3\lib\urllib\request.py", line 642, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "F:\python\python3\lib\urllib\request.py", line 570, in error
+    return self._call_chain(*args)
+  File "F:\python\python3\lib\urllib\request.py", line 504, in _call_chain
+    result = func(*args)
+  File "F:\python\python3\lib\urllib\request.py", line 650, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 404: Not Found
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 49, in query
+    answer = fuseki.get_sparql_result(sparql)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\jena_sparql_endpoint.py", line 17, in get_sparql_result
+    return self.sparql_conn.query().convert()
+  File "F:\python\python3\lib\site-packages\SPARQLWrapper\Wrapper.py", line 798, in query
+    return QueryResult(self._query())
+  File "F:\python\python3\lib\site-packages\SPARQLWrapper\Wrapper.py", line 772, in _query
+    raise EndPointNotFound(e.read())
+SPARQLWrapper.SPARQLExceptions.EndPointNotFound: EndPointNotFound: it was impossible to connect with the endpoint in that address, check if it is correct. 
+
+Response:
+b'Error 404: Not Found\n\n\nFuseki - version 3.6.0 (Build date: 2017-12-13T21:13:34+0000)\n'
+2018-11-05 15:31:11,310 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 123061
+2018-11-05 15:40:09,758 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 50, in query
+    answer = fuseki.get_sparql_result_value(sparql)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\jena_sparql_endpoint.py", line 67, in get_sparql_result_value
+    query_head, query_result = self.parse_result(query_result)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\jena_sparql_endpoint.py", line 27, in parse_result
+    query_head = query_result['head']['vars']
+TypeError: string indices must be integers
+2018-11-05 15:40:09,788 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 83784
+2018-11-05 15:49:05,670 [logger:django.request] [log:log_response:228] [ERROR]- Internal Server Error: /auto_answer_for_movie/query
+Traceback (most recent call last):
+  File "F:\python\python3\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 126, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\python\python3\lib\site-packages\django\core\handlers\base.py", line 124, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\python\python3\lib\site-packages\django\views\decorators\csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\main_query.py", line 50, in query
+    result = fuseki.get_sparql_result_value(sparql)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\jena_sparql_endpoint.py", line 68, in get_sparql_result_value
+    query_head, query_result = self.parse_result(query_result)
+  File "F:\bsworkspace\server\auto_answer_for_movie\kbqa\jena_sparql_endpoint.py", line 28, in parse_result
+    query_head = query_result['head']['vars']
+TypeError: string indices must be integers
+2018-11-05 15:49:05,690 [logger:django.server] [basehttp:log_message:124] [ERROR]- "GET /auto_answer_for_movie/query?question=%E6%88%90%E9%BE%99%E6%BC%94%E8%BF%87%E5%93%AA%E4%BA%9B%E7%94%B5%E5%BD%B1 HTTP/1.1" 500 82303
