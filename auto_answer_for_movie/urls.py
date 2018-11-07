@@ -15,15 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from kbqa import main_query, debug
+from kbqa import main_query
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    # url(r'^auto_answer_for_movie/debug/count', debug.get_count),
-    # url(r'^auto_answer_for_movie/debug/info', debug.get_info),
     url(r'^auto_answer_for_movie/query', main_query.query),
+    url(r'^auto_answer_for_movie/wx', main_query.wx_main),
     url(r'', main_query.index),
     url(r'^auto_answer_for_movie/', main_query.index),
-
-
 ]

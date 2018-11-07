@@ -27,7 +27,22 @@ LABEL_TEMP_MAP = {
     12: 'how_many_movie_by_actor_question',  # 演员演过多少部电影
     13: 'actor_birthday_question',  # 演员生日
     14: 'movie_all_info_question',  # 电影的详细信息
+    15: 'actor_birthplace_question',  # 演员出生地
+    16: 'actor_biography_question',  # 演员星座
+    17: 'actor_gender_question',  # 演员性别
+    18: 'actor_pic_question',  # 演员的头像
+    19: 'actor_englishname_question',  # 演员英文名
+    20: 'movie_duration_question',  # 电影时长
+    21: 'movie_alias_question',  # 电影别名
+    22: 'movie_cover_question',  # 电影封面图
+    23: 'movie_show_country_question',  # 电影在哪些国家上映了
+    24: 'movie_has_director_question',  # 电影有哪些导演
+    25: 'director_direct_movies_question',  # 导演导了哪些电影
+    26: 'genres_contains_movies_question',  # 某类型的电影有哪些
 }
+
+
+
 cur_path = os.path.dirname(os.path.abspath(__file__))
 model_name = 'word_vector_cnn_model.h5'  # 使用的分类模型的名字 cnn_model.h5 word_vector_cnn_model.h5
 model_path = os.path.abspath(os.path.join(cur_path, '..\\data\\model'))
@@ -51,6 +66,7 @@ class Question2Sparql:
         word_objects = self.tw.get_word_objects(question)
         words_list = self.tw.get_cut_words(question)
         label = self.predict(words_list)
+        print(question)
         print(label)
         func = 'QuestionSet.' + LABEL_TEMP_MAP[label]
         print(func)
@@ -75,7 +91,7 @@ def fun_call(function_name, word_objects):
 
 
 if __name__ == '__main__':
-    ques = [u'电影功夫之王有哪些演员？', u'成龙演过什么电影？', u'电影功夫之王有哪些演员？', u'电影功夫之王有哪些演员？']
+    ques = [u'电影功夫之王有哪些演员？', u'成龙演过哪些电影？', u'电影功夫之王有哪些演员？', u'电影功夫之王有哪些演员？']
     q2s = Question2Sparql()
     for q in ques:
         my_query = q2s.get_sparql(q)
