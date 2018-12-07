@@ -101,22 +101,23 @@ LOGGING = {
             'filename': 'logs/error.log',
             'formatter': 'standard'
         },
-        'kbqa': {
-            'level': 'DEBUG',
+        'ques_handler': {
+            'level': 'INFO',
             'class': 'logging.FileHandler',
-            'filename': 'logs/kbqa.log',
-            'formatter': 'standard'
+            'filename': 'logs/questions.log',
+            'formatter': 'verbose',
+            'encoding': 'utf8',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['default', 'console', 'error'],
+            'handlers': ['default', 'console'],
             'level': 'DEBUG',
             'propagate': True,
         },
-        'kbqa': {
-            'handlers': ['kbqa', 'console', 'error'],
-            'level': 'DEBUG',
+        'ques_logger': {
+            'handlers': ['ques_handler', 'console'],
+            'level': 'INFO',
             'propagate': True,
         },
     },

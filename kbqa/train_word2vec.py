@@ -26,4 +26,4 @@ def test_model():
     # print(model.similarity('成龙', '李连杰'))
 
 if __name__ == '__main__':
-    test_model()
+    generate_model()

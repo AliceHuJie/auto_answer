@@ -7,13 +7,12 @@ import pandas as pd
 import numpy as np
 import re
 import os
-from kbqa.word_tagging import Tagger
+from kbqa.word_tagging import Tagger, Word
 
-
-movie_name_df = pd.read_table('../data/movie.txt', header=None, sep=" ")
-actor_name_df = pd.read_table('../data/name.txt', header=None, sep=" ")
-genre_name_df = pd.read_table('../data/genres.txt', header=None, sep=" ")
-number_value_df = pd.read_table('../data/number.txt', header=None, sep=" ")
+movie_name_df = pd.read_table('../data/movie.txt', header=None, sep=" ", encoding='utf-8')
+actor_name_df = pd.read_table('../data/name2.txt', header=None, sep=" ", encoding='utf-8')   # name2 增加了外文名
+genre_name_df = pd.read_table('../data/genres.txt', header=None, sep=" ", encoding='utf-8')
+number_value_df = pd.read_table('../data/number2.txt', header=None, sep=" ", encoding='utf-8')  # number2中的分数增加了中文表达
 movie_name_array = np.array(movie_name_df[0])
 actor_name_array = np.array(actor_name_df[0])
 genre_name_array = np.array(genre_name_df[0])
@@ -47,16 +46,17 @@ def is_recognizable_movie_name(check_movie_name):
 def get_all_chinese_name():
     """
     从人名文件中拿到所有中文名的人，保存到name文件中
+    11.13日修改了，得到外文名+中文名
     :return: 
     """
-    name_list = pd.read_table('./user_dicts/person_name.txt', header=None, sep=" ")
+    name_list = pd.read_table('./user_dicts/person_name.txt', header=None, sep=" ", encoding='utf-8')
     array = np.array(name_list[0])  # 取第一列，也就是人名
-    new_name_list = filter(is_chinese_name, array)   # 返回值是iter
+    # new_name_list = filter(is_chinese_name, array)   # 返回值是iter
     # print(list(new_name_list))   # iter变list打印
-    new_array = np.array(list(new_name_list))   # list 转为np.array
+    # new_array = np.array(list(new_name_list))   # list 转为np.array
     # print(new_array)
-    data = pd.DataFrame(new_array)  # np.array 转 df
-    data.to_csv('../data/name.txt', index=False, header=False)  # df 保存到文件中
+    data = pd.DataFrame(array)  # np.array 转 df
+    data.to_csv('../data/name2.txt', index=False, header=False)  # df 保存到文件中
 
 
 def get_all_recognizable_movie_name():
@@ -64,7 +64,7 @@ def get_all_recognizable_movie_name():
     从电影名文件中拿到所有可识别的电影名去作为构建问句后的训练数据
     :return: 
     """
-    movie_list = pd.read_table('./user_dicts/movie_title.txt', header=None, sep=" ")
+    movie_list = pd.read_table('./user_dicts/movie_title.txt', header=None, sep=" ", encoding='utf-8')
     array = np.array(movie_list[0])  # 取第一列，也就是电影名
     new_movie_list = filter(is_recognizable_movie_name, array)   # 返回值是iter
     # print(list(new_movie_list))   # iter变list打印
@@ -81,11 +81,17 @@ def get_random_score():
     :return: 
     """
     number_list = []
-    k = 0
+    k = 0.0
     while k <= 10:
-        number_list.append(round(k, 2))
+        num = round(k, 2)
+        number_list.append(str(num))
         k = k + 0.1
-    new_array = np.array(list(number_list))  # list 转为np.array
+    k1 = 0
+    while k1 <= 10:
+        number_list.append(str(k1))
+        k1 = k1 + 1
+    number_list.sort()
+    new_array = np.array(number_list)  # list 转为np.array
     # print(new_array)
     data = pd.DataFrame(new_array)  # np.array 转 df
     data.to_csv('../data/number.txt', index=False, header=False)  # df 保存到文件中
@@ -116,7 +122,7 @@ def generate_all_question_temp():
         tag = get_tag_by_filename(file)
         file = path + file
         res = open(file, 'r', encoding='UTF-8')
-        a_df = pd.read_table(res, header=None, names=['question_temp'], sep=" ")
+        a_df = pd.read_table(res, header=None, names=['question_temp'], sep=" ", encoding='utf-8')
         a_df['tag'] = tag
         df = df.append(a_df, ignore_index=True)
     df.to_csv('../data/all_question_temp.txt', header=False, sep=' ')
@@ -131,7 +137,7 @@ def generate_train_data():
         并根据问题类别打上标签，再存入tagged_data.txt 中
     :return: 
     """
-    ques_temp_df = pd.read_table('../data/all_question_temp.txt', header=None, sep=" ")
+    ques_temp_df = pd.read_table('../data/all_question_temp.txt', header=None, sep=" ", encoding='utf-8')
     with open('../data/tagged_data.txt', 'a+', encoding='utf8') as f:
         for index in ques_temp_df.index:   # 逐行遍历数据
             temp = ques_temp_df.iloc[index, 1]
@@ -160,15 +166,16 @@ def fill_question(ques_temp):
     return question
 
 
-def get_questions_from_w2vtrain():
+def get_questions_for_w2vtrain():
     """
     从tagged_data中取出问题那一列，保存到data/w2v/data中。就可以和其他的个人简介等内容，一起做分词和向量训练
     :return: 
     """
-    tagged_data = pd.read_table('../data/tagged_data.txt', header=None, sep=" ")
-    questions = tagged_data.iloc[:, 0]
+    # tagged_data = pd.read_table('../data/tagged_data.txt', header=None, sep=" ", encoding= 'utf-8')
+    # questions = tagged_data.iloc[:, 0]
     with open('../data/w2vdata/questions.txt', 'w', encoding='utf-8') as f:
-        for question in questions:
+        for line in open("../data/tagged_data.txt", 'r', encoding='utf-8'):
+            question = line.split(" ")[0]
             f.write(question + '\n')
 
 
@@ -193,7 +200,83 @@ def train_data_cut():
     print('total num :', line_num)
 
 
+def text2number(word_objects):
+    """
+    把切词后的分数转换为数字 ，比如八点五，转成8.5
+    :return: 
+    """
+    m = {u'点': '.', u'零': 0, u'一': 1, u'二': 2, u'三': 3, u'四': 4, u'五': 5, u'六': 6, u'七': 7, u'八': 8, u'九': 9, u'十': 10}
+    new_word_objects = []
+    for word in word_objects:
+        if word.pos == 'ss':
+            s = word.token.split(u'分')[0]
+            number = ''
+            for c in s:
+                number = number + m.get(c)
+            word.token = number
+            new_word_objects.append(Word(word.token, word.pos))
+
+
+def gen_annotation_questions():
+    """
+    生成槽位识别的标注好的训练数据
+    从all_question_temp提取问题模板，填充问句的同时得到对应的标注,存入annotation_question_data.txt中
+    
+    比如： 
+    nr 和 nr 合作的电影有哪些？ => 填充得到：
+    芭芭拉 · 迪 里克森 和 袁丁 合演 的 电影 有 哪些?  => 对应的标识得到
+    B-PER I-PER I-PER I-PER I-PER。。。
+    :return: 
+    """
+    ques_temp_df = pd.read_table('../data/all_question_temp.txt', header=None, sep=" ", encoding='utf-8')
+    with open('../data/annotation_data_test.txt', 'a+', encoding='utf8') as f:
+        for index in ques_temp_df.index:  # 逐行遍历模板问题
+            temp = ques_temp_df.iloc[index, 1]
+            letters, labels = fill_and_annotation_question(temp)
+            lines = list(map(lambda x, y: x + ' ' + y + '\n', letters, labels))
+            f.writelines(lines)
+            f.write('\n')
+
+
+def fill_and_annotation_question(ques_temp):
+    """
+    根据模板填充得到问题，同时得到对应的标注, 提供给gen_annotation_questions调用
+    :param ques_temp: 问题模板
+    :return: (letters, labels) 填充后问题的每个字及其对应label
+    """
+    question = ques_temp
+    while question.find('ng') != -1:  # 替换类型名
+        question = question.replace('ng', np.random.choice(genre_name_array), 1)
+    while question.find('x') != -1:  # 替换评分值
+        question = question.replace('x', str(np.random.choice(number_value_array)), 1)
+
+    letters = []
+    labels = ['O'] * len(question)  # 此时问句模板中只含nr, nz需要替换
+    while question.find('nr') != -1:  # 多个人名
+        index = question.find('nr')
+        actor = np.random.choice(actor_name_array)
+        # actor = '丹尼尔·库德摩尔'
+        question = question.replace('nr', actor, 1)
+        sub = ['B-PER'] + ['I-PER'] * (len(actor) - 1)
+        labels[index:index+2] = sub
+    while question.find('nz') != -1:  # 替换电影名
+        index = question.find('nz')
+        movie = np.random.choice(movie_name_array)
+        question = question.replace('nz', movie, 1)
+        sub = ['B-MV'] + ['I-MV'] * (len(movie) - 1)
+        labels[index:index+2] = sub
+    letters = list(map(str, question))  # 每个字的列表
+    return letters, labels
+
+
 if __name__ == '__main__':
-    for i in range(1, 50):
+    # generate_all_question_temp()
+    for i in range(6):
         generate_train_data()
-        print('one time done')
+    # for i in range(1, 59):
+    #     generate_train_data()
+    #     print('one time done')
+    # get_questions_for_w2vtrain()
+    # train_data_cut()
+    # get_random_score()
+    # get_all_chinese_na me()

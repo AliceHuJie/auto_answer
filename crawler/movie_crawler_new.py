@@ -233,6 +233,7 @@ def craw_movie_detail(movie_id):
         traceback.print_exc()
         return None
 
+
 def insert_movie(movie):
     try:
         insert_movie_sql = insert_movie_command.format(movie_id=movie['movie_id'],
@@ -250,6 +251,7 @@ def insert_movie(movie):
     except:
         traceback.print_exc(file=open('error.log', 'a+'))
         print('insert movie failed， movie_id:', movie['movie_id'])
+
 
 def insert_movie_to_actor(movie):
     actor_id_list = movie["actor_id_list"]

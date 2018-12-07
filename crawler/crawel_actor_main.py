@@ -108,6 +108,7 @@ def craw_person_detail(person_id):
         traceback.print_exc()
         return None
 
+
 def craw_actor_and_insert(actor_id):
     try:
         actor = craw_person_detail(actor_id)

@@ -2,6 +2,8 @@
 # @Time    : 2018/10/31 20:35
 # @Author  : hujie
 # @Info  : 作为web后台提供的唯一查询接口
+import random
+
 from kbqa.jena_sparql_endpoint import JenaFuseki
 from kbqa.question2sparql import Question2Sparql
 import logging
@@ -14,16 +16,15 @@ import hashlib
 import time
 import os
 
-logger = logging.getLogger('django')
+from kbqa.wx_msg import TextMsg, ImageMsg
 
+logger = logging.getLogger('django')
+ques_logger = logging.getLogger('ques_logger')
 fuseki = JenaFuseki()  # 预加载jeneFuseki连接对象
 q2s = Question2Sparql()  # 运行该文件的时候就加载好q2s对象，避免重复创建该对象导致的模型加载等的耗时
 # 加载模型后先使用测试数据预测一下，不然等到接收的问句去预测时会报错
-ques = [u'电影功夫之王有哪些演员？']
-for q in ques:
-    my_query = q2s.get_sparql(q)
-    print(my_query)
-    print('服务启动成功......')
+my_query = q2s.get_sparql(u'电影功夫之王有哪些演员？')
+print('服务启动成功......')
 
 
 def index(request):
@@ -37,11 +38,20 @@ def query(question):
     :return: 答案
     """
     # TO DO 问题写入文件记录
-    sparql = q2s.get_sparql(question)
-    print(sparql)  # 打印出转换后的查询语句
-    result = fuseki.get_sparql_result(sparql)  # json形式的查询结果
-    answer = fuseki.get_sparql_result_value(result)  # 列表形式的查询结果
-    return '，'.join(answer)
+    sparql, label, func = q2s.get_sparql(question)
+    if label == -1:
+        answer = '抱歉，暂不能回答您的这个问题'
+    elif sparql is None:
+        answer = u'抱歉，您提供的信息不够完整'
+    else:
+        result = fuseki.get_sparql_result(sparql)  # json形式的查询结果
+        answer = fuseki.get_sparql_result_value(result)  # 列表形式的查询结果
+        if len(answer) == 0:
+            answer = u'抱歉，暂时查不到该问题答案'
+        else:
+            answer = ','.join(answer)
+    ques_logger.info(msg='{question} {label} {func} [{answer}]'.format(question=question, label=label, func=func, answer=answer[:20]+'...'))  # TODO 记录实体识别效果
+    return answer
 
 
 @csrf_exempt
@@ -70,30 +80,31 @@ def auto_reply(requests):
     web_data = requests.body
     root = ET.fromstring(web_data)
     to_user_name = root.find('ToUserName').text
-    # from_user_name = root.find('FromUserName').text
-    # create_time = root.find('CreateTime').text
+    from_user_name = root.find('FromUserName').text
     msg_type = root.find('MsgType').text
-    # msg_id = root.find('MsgId').text
     if msg_type == 'text':
+        userid = requests.GET['openid']
         question = root.find('Content').text
-        return create_xml(ToUserName=requests.GET['openid'], FromUserName=to_user_name, CreateTime=int(time.time()),
-                          MsgType='text', Content=query(question))
+        if userid == 'o4QWQ1krAxO88bVEL7HW0S7QyXTc':
+            return TextMsg(from_user_name, to_user_name, to_tang()).send()
+        return TextMsg(from_user_name, to_user_name, query(question)).send()
     elif msg_type == 'image':
-        resource_url = root.find('PicUrl').text
-        return create_xml(ToUserName=requests.GET['openid'], FromUserName=to_user_name, CreateTime=int(time.time()),
-                          MsgType='text', Content='图片已经接收\nUrl:%s' % resource_url)
+        # url = 'http://img1.imgtn.bdimg.com/it/u=3992277371,3755901066&fm=27&gp=0.jpg'
+        # return ImageMsg(from_user_name, to_user_name, media_id).send()
+        return TextMsg(from_user_name, to_user_name, '图片已接收到').send()
     elif msg_type == 'voice':
-        return create_xml(ToUserName=requests.GET['openid'], FromUserName=to_user_name, CreateTime=int(time.time()),
-                          MsgType='text', Content='语音已接收到')
+        return TextMsg(from_user_name, to_user_name, '语音已接收到').send()
     elif msg_type == 'video':
-        return create_xml(ToUserName=requests.GET['openid'], FromUserName=to_user_name, CreateTime=int(time.time()),
-                          MsgType='text', Content='视频已接收到')
+        return TextMsg(from_user_name, to_user_name, '视频已接收到').send()
     elif msg_type == 'shortvideo':
-        return create_xml(ToUserName=requests.GET['openid'], FromUserName=to_user_name, CreateTime=int(time.time()),
-                          MsgType='text', Content='小视频已接收到')
+        return TextMsg(from_user_name, to_user_name, '小视频已接收到').send()
     else:
-        return create_xml(ToUserName=requests.GET['openid'], FromUserName=to_user_name, CreateTime=int(time.time()),
-                          MsgType='text', Content='不支持该数据类型')
+        return TextMsg(from_user_name, to_user_name, '不支持该数据类型').send()
+
+
+def to_tang():
+    msgs = ['死胖子你在干啥子呢？', '狗娃儿我想你了！', '狗胖', '你是狗胖啊？', '想你，要抱抱。', '爱你哦~', '么么哒', 'MUAMUA', '抱~~', '我爱你', '要抱', '你看你好特殊，公众号超级VIP']
+    return random.choice(msgs)
 
 
 def log(text):  # 记录装饰器

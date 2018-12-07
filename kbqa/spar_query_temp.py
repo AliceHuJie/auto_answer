@@ -37,7 +37,7 @@ def generic_movie_property(word_objects, movie_property):
     for w in word_objects:
         if w.pos == 'nz':
             e = u"?m :movieTitle '{movie}'." \
-                u"?m :'{pro}' ?x".format(movie=w.token, pro=movie_property)
+                u"?m :{pro} ?x".format(movie=w.token, pro=movie_property)
             sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
                                               select=select,
                                               expression=e)
@@ -67,6 +67,11 @@ def generic_person_property(word_objects, person_property):
 
 
 def extract_movie_person_genre(word_objects):
+    """
+    提取出问句中的人名，电影名。
+    :param word_objects: 
+    :return: 
+    """
     movie = None
     person = None
     genre = None
@@ -83,6 +88,62 @@ def extract_movie_person_genre(word_objects):
 class QuestionSet:
     def __init__(self):
         pass
+        # ******************************     电影基本属性查询      ********************************
+    @staticmethod
+    def movie_rating_question(word_objects):
+        """
+        某电影评分是多少
+        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
+        :return: 查询语句
+        """
+        return generic_movie_property(word_objects, 'movieRating')
+
+    @staticmethod
+    def movie_showtime_question(word_objects):
+        """
+        某电影上映时间是多少
+        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
+        :return: 查询语句
+        """
+        return generic_movie_property(word_objects, 'movieReleaseDate')
+
+    @staticmethod
+    def movie_intro_question(word_objects):
+        """
+        某电影的剧情
+        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
+        :return: 查询语句
+        """
+        return generic_movie_property(word_objects, 'movieIntroduction')
+
+    @staticmethod
+    def movie_duration_question(word_objects):
+        """
+        某电影时长是多少
+        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
+        :return: 查询语句
+        """
+        return generic_movie_property(word_objects, 'movieDuration')
+
+    @staticmethod
+    def movie_alias_question(word_objects):
+        """
+        某电影别名是什么
+        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
+        :return: 查询语句
+        """
+        return generic_movie_property(word_objects, 'movieAlias')
+
+    @staticmethod
+    def movie_cover_question(word_objects):
+        """
+        某电影封面是什么
+        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
+        :return: 查询语句
+        """
+        return generic_movie_property(word_objects, 'movieCover')
+
+
     # ***********************************  非基本属性查询  **************************************
 
     @staticmethod
@@ -103,28 +164,6 @@ class QuestionSet:
         return sparql
 
     @staticmethod
-    def has_movie_question(word_objects):
-        """
-        某演员演了什么电影
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        select = u"?x"
-
-        sparql = None
-        movie, person, genre = extract_movie_person_genre(word_objects)
-        if person is not None:
-                e = u"?s :personName '{person}'." \
-                    u"?s :hasActedIn ?m." \
-                    u"?m :movieTitle ?x".format(person=person)
-
-                sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
-                                                  select=select,
-                                                  expression=e)
-
-        return sparql
-
-    @staticmethod
     def movie_show_country_question(word_objects):
         """
         电影在哪些国家上映了
@@ -140,6 +179,27 @@ class QuestionSet:
                     u"?m :showInCountry ?a." \
                     u"?a :countryName ?x".format(movie=w.token)
 
+                sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
+                                                  select=select,
+                                                  expression=e)
+                break
+        return sparql
+
+    @staticmethod
+    def movie_types_question(word_objects):
+        """
+        电影是什么风格
+        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
+        :return: 查询语句
+        """
+        select = u"?x"
+
+        sparql = None
+        for w in word_objects:
+            if w.pos == 'nz':
+                e = u"?m :movieTitle '{movie}'." \
+                    u"?m :hasGenre ?a." \
+                    u"?a :genreName ?x".format(movie=w.token)
                 sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
                                                   select=select,
                                                   expression=e)
@@ -169,140 +229,85 @@ class QuestionSet:
         return sparql
 
     @staticmethod
-    def director_direct_movies_question(word_objects):
+    def has_movie_question(word_objects):
         """
-        导演拍了哪些电影
+        查询电影，不包含评分条件。 可选槽位：演员可以是多个，类型
         :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
         :return: 查询语句
         """
         select = u"?x"
-
         sparql = None
+        e = ''
+        i = 1
         for w in word_objects:
             if w.pos == 'nr':
-                e = u"?s :personName '{person}'." \
-                    u"?s  rdf: type:Director." \
-                    u"?s: hasDirected ?m." \
-                    u"?m: movieTitle ?x.".format(person=w.token)
-
-                sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
-                                                  select=select,
-                                                  expression=e)
-                break
-        return sparql
-
-    @staticmethod
-    def genres_contains_movies_question(word_objects):
-        """
-        某类型的电影有哪些
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        select = u"?x"
-
-        sparql = None
-        for w in word_objects:
+                e = e + u"?s{i} :personName '{person}'. ?s{i}  :hasActedIn ?m. ".format(person=w.token, i=i)
+                i = i + 1
             if w.pos == 'ng':
-                e = u"?s :genreName '{genres}'." \
-                    u"?s  rdf: type:Genre." \
-                    u"?m: hasGenre ?s." \
-                    u"?m: movieTitle ?x.".format(genres=w.token)
-
-                sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
-                                                  select=select,
-                                                  expression=e)
-                break
-        return sparql
-
-    @staticmethod
-    def movie_gt_by_actor_question(word_objects):
-        """
-        某演员演的评分大于多少分的电影
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        select = u"?m"
-
-        sparql = None
-        movie = None
-        actor = None
-        score = None
-        for w in word_objects:
-            if w.pos == 'nz':
-                movie = w.token
-            if w.pos == 'nr':
-                actor = w.token
-            if w.pos == 'm':
-                score = w.token
-        if movie is not None and actor is not None and score is not None:
-                e = u"?m :movieTitle '{movie}'." \
-                    u"?m: movieRating ?r." \
-                    u"?m :hasActor ?a." \
-                    u"?a :personName {person}" \
-                    u" Filter(?r >= {score})".format(movie=movie, person=actor, score=score)
-
-                sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
-                                                  select=select,
-                                                  expression=e)
-        return sparql
-
-    @staticmethod
-    def movie_lt_by_actor_question(word_objects):
-        """
-        某演员演的评分大于多少分的电影
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        select = u"?m"
-
-        sparql = None
-        movie = None
-        actor = None
-        score = None
-        for w in word_objects:
-            if w.pos == 'nz':
-                movie = w.token
-            if w.pos == 'nr':
-                actor = w.token
-            if w.pos == 'm':
-                score = w.token
-        if movie is not None and actor is not None and score is not None:
-            e = u"?m :movieTitle '{movie}'." \
-                u"?m: movieRating ?r." \
-                u"?m :hasActor ?a." \
-                u"?a :personName {person}" \
-                u" Filter(?r <= {score})".format(movie=movie, person=actor, score=score)
-
+                e = e + u"?m :hasGenre ?g. ?g :genreName '{genre}'.".format(genre=w.token)
+        if e != '':
+            e = e + u" ?m :movieTitle ?x"
             sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
-                                              select=select,
-                                              expression=e)
+                                                  select=select,
+                                                  expression=e)
         return sparql
 
     @staticmethod
-    def movie_type_question(word_objects):
+    def has_movie_gt_question(word_objects):
         """
-        电影是什么风格
+        查询电影， 含大于评分条件。 可选槽位：演员可以是多个，类型
         :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
         :return: 查询语句
         """
         select = u"?x"
-
         sparql = None
+        e = ''
+        i = 1
         for w in word_objects:
-            if w.pos == 'nz':
-                e = u"?m :movieTitle '{movie}'." \
-                    u"?m :hasGenre ?a." \
-                    u"?a :genreName ?x".format(movie=w.token)
-                sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
+            if w.pos == 'nr':
+                e = e + u"?s{i} :personName '{person}'. ?s{i}  :hasActedIn ?m. ".format(person=w.token, i=i)
+                i = i + 1
+            if w.pos == 'ng':
+                e = e + u"?m :hasGenre ?g. ?g :genreName '{genre}'.".format(genre=w.token)
+            if w.pos == 'ss':
+                e = e + u" ?m :movieRating ?r. Filter(?r >= {score}).".format(score=w.token)
+        if e != '':
+            e = e + u" ?m :movieTitle ?x"
+            sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
                                                   select=select,
                                                   expression=e)
-                break
         return sparql
 
     @staticmethod
-    def movie_type_by_actor_question(word_objects):
+    def has_movie_lt_question(word_objects):
+        """
+        查询电影， 含小于于评分条件。 可选槽位：演员可以是多个，类型
+        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
+        :return: 查询语句
+        """
+        select = u"?x"
+        sparql = None
+        e = ''
+        i = 1
+        for w in word_objects:
+            if w.pos == 'nr':
+                e = e + u"?s{i} :personName '{person}'. ?s{i}  :hasActedIn ?m. ".format(person=w.token, i=i)
+                i = i + 1
+            if w.pos == 'ng':
+                e = e + u"?m :hasGenre ?g. ?g :genreName '{genre}'.".format(genre=w.token)
+            if w.pos == 'ss':
+                e = e + u" ?m :movieRating ?r. Filter(?r <= {score}).".format(score=w.token)
+        if e != '':
+            e = e + u" ?m :movieTitle ?x"
+            sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
+                                                  select=select,
+                                                  expression=e)
+        return sparql
+
+    @staticmethod
+    def types_of_movie_question(word_objects):
         """ 
-        演员演过哪些类型的电影
+        问类型，某演员演过哪些类型的电影
         :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
         :return: 查询语句
         """
@@ -323,89 +328,18 @@ class QuestionSet:
         return sparql
 
     @staticmethod
-    def type_movie_by_actor_question(word_objects):
-        """ 
-        演员演过的某类型的电影有哪些
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
+    def cooperate_actors_question(word_objects):
+        """某某合作过的演员"""
         select = u"?x"
         sparql = None
-        person = None
-        genre = None
         for w in word_objects:
-            if w.pos == 'nr' and person is None:
-                person = w.token
-            if w.pos == 'ng' and genre is None:
-                genre = w.token
-        if person is not None and genre is not None:
-            e = u"?s :personName '{person}'." \
-                u"?s :hasActedIn ?m." \
-                u"?m :movieTitle ?x." \
-                u"?m :hasGenre ?a." \
-                u"?a :genreName {genre}".format(person=person, genre=genre)
-
-            sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
-                                                      select=select,
-                                                      expression=e)
+            if w.pos == 'nr':
+                e = u"?s :personName '{person}'. ?s  :hasActedIn ?m. ?m :hasActor ?a. ?a :personName ?x".format(person=w.token)
+                sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX,
+                                              select=select,
+                                              expression=e)
+                break
         return sparql
-
-    # ******************************     电影基本属性查询      ********************************
-
-    @staticmethod
-    def movie_showtime_question(word_objects):
-        """
-        某电影上映时间是多少
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        return generic_movie_property(word_objects, 'movieReleaseDate')
-
-    @staticmethod
-    def movie_intro_question(word_objects):
-        """
-        某电影的剧情
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        return generic_movie_property(word_objects, 'movieIntroduction')
-
-    @staticmethod
-    def movie_rating_question(word_objects):
-        """
-        某电影评分是多少
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        return generic_movie_property(word_objects, 'movieRating')
-
-    @staticmethod
-    def movie_duration_question(word_objects):
-        """
-        某电影时长是多少
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        return generic_movie_property(word_objects, 'movieDuration')
-
-    @staticmethod
-    def movie_alias_question(word_objects):
-        """
-        某电影别名是什么
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        return generic_movie_property(word_objects, 'movieAlias')
-
-    @staticmethod
-    def movie_cover_question(word_objects):
-        """
-        某电影封面是什么
-        :param word_objects: 问句分词后的word_objects 列表，其中包含了词性
-        :return: 查询语句
-        """
-        return generic_movie_property(word_objects, 'movieCover')
-
     # ##########################      演员基本属性查询      ###############################
 
     @staticmethod
