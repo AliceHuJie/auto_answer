@@ -11,7 +11,7 @@ from requests import TooManyRedirects
 mysql_db = pymysql.connect(host="localhost", user="root", password='2736', db="anto_answer_for_movie", use_unicode=True,
                            charset="utf8")
 mysql_cursor = mysql_db.cursor()
-person_detail_url = 'https://movie.douban.com/celebrity/{person_id}/'
+person_detail_url = 'https://movie.my_crawler.com/celebrity/{person_id}/'
 insert_actor_command = 'insert into `anto_answer_for_movie`.`actor` (person_id, person_name, person_gender, person_english_name, person_biography, person_birth_place, person_birth_day, person_pic, person_introduction) values ({person_id}, "{person_name}", "{person_gender}", "{person_english_name}", "{person_biography}", "{person_birth_place}", "{person_birth_day}", "{person_pic}", "{person_introduction}")'
 mark_person_crawled_command = 'UPDATE `anto_answer_for_movie`.`movie_to_actor` SET `is_crawled`=1 WHERE `actor_id`={actor_id}'
 mark_person_crawled_error_command = 'UPDATE `anto_answer_for_movie`.`movie_to_actor` SET `is_crawled`=2  WHERE `actor_id`= {actor_id}'
@@ -24,9 +24,10 @@ headers["Accept-Encoding"] = "gzip, deflate, br"
 headers["Accept-Language"] = "zh-CN,zh;q=0.8"
 headers["Cache-Control"] = "max-age=0"
 headers["Connection"] = "keep-alive"
-headers["Host"] = "movie.douban.com"
-headers["Cookie"] = 'll="108288"; bid=YoMInPmOpAE; __utmc=30149280; __utmz=30149280.1524141162.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmc=223695111; __yadk_uid=DDfMw9h7R3j01whC0PIAprcu255GiQ6h; _vwo_uuid_v2=D2CE7F8DACB2F100DAC67505F926B1DED|e92583c945a9baf837d5e9cf3f3e2000; ap=1; ps=y; __utmv=30149280.17596; ct=y; push_noty_num=0; push_doumail_num=0; __utma=30149280.325814021.1524141162.1524141162.1524192137.2; __utmt=1; __utmb=30149280.2.10.1524192137; dbcl2="175968756:u6pQzFIAtio"; ck=OkKF; __utma=223695111.1298820939.1524141163.1524143476.1524192217.3; __utmb=223695111.0.10.1524192217; __utmz=223695111.1524192217.3.2.utmcsr=douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/accounts/login; _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1524192217%2C%22https%3A%2F%2Fwww.douban.com%2Faccounts%2Flogin%3Fredir%3Dhttps%253A%252F%252Fmovie.douban.com%252F%22%5D; _pk_ses.100001.4cf6=*; _pk_id.100001.4cf6=a351b8c8dc6cd472.1524141163.2.1524192224.1524143405.'
-headers["Referer"] = "https://movie.douban.com/tag/"
+headers["Host"] = "movie.my_crawler.com"
+headers[
+    "Cookie"] = 'll="108288"; bid=YoMInPmOpAE; __utmc=30149280; __utmz=30149280.1524141162.1.1.utmcsr=baidu|utmccn=(organic)|utmcmd=organic; __utmc=223695111; __yadk_uid=DDfMw9h7R3j01whC0PIAprcu255GiQ6h; _vwo_uuid_v2=D2CE7F8DACB2F100DAC67505F926B1DED|e92583c945a9baf837d5e9cf3f3e2000; ap=1; ps=y; __utmv=30149280.17596; ct=y; push_noty_num=0; push_doumail_num=0; __utma=30149280.325814021.1524141162.1524141162.1524192137.2; __utmt=1; __utmb=30149280.2.10.1524192137; dbcl2="175968756:u6pQzFIAtio"; ck=OkKF; __utma=223695111.1298820939.1524141163.1524143476.1524192217.3; __utmb=223695111.0.10.1524192217; __utmz=223695111.1524192217.3.2.utmcsr=my_crawler.com|utmccn=(referral)|utmcmd=referral|utmcct=/accounts/login; _pk_ref.100001.4cf6=%5B%22%22%2C%22%22%2C1524192217%2C%22https%3A%2F%2Fwww.my_crawler.com%2Faccounts%2Flogin%3Fredir%3Dhttps%253A%252F%252Fmovie.my_crawler.com%252F%22%5D; _pk_ses.100001.4cf6=*; _pk_id.100001.4cf6=a351b8c8dc6cd472.1524141163.2.1524192224.1524143405.'
+headers["Referer"] = "https://movie.my_crawler.com/tag/"
 # headers["Upgrade-Insecure-Requests"] = '1'
 headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.90 Safari/537.36 2345Explorer/9.3.0.17248"
 # proxies = {'https': 'https://223.241.78.75:18118', 'http': 'http://223.241.78.75:18118'}

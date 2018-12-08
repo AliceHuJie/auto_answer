@@ -1,7 +1,4 @@
 # 连接本地mysql数据库
-import random
-import time
-import traceback
 
 import bs4
 import pymysql
@@ -11,7 +8,7 @@ from requests import TooManyRedirects
 mysql_db = pymysql.connect(host="localhost", user="root", password='2736', db="anto_answer_for_movie", use_unicode=True,
                            charset="utf8")
 mysql_cursor = mysql_db.cursor()
-person_detail_url = 'https://movie.douban.com/celebrity/{person_id}/'
+person_detail_url = 'https://movie.my_crawler.com/celebrity/{person_id}/'
 insert_director_command = 'insert into `anto_answer_for_movie`.`director` (person_id, person_name, person_gender, person_english_name, person_biography, person_birth_place, person_birth_day, person_pic, person_introduction) values ({person_id}, "{person_name}", "{person_gender}", "{person_english_name}", "{person_biography}", "{person_birth_place}", "{person_birth_day}", "{person_pic}", "{person_introduction}")'
 mark_person_crawled_command = 'UPDATE `anto_answer_for_movie`.`movie_to_director` SET `is_crawled`=1 WHERE `director_id`={director_id};'
 mark_person_crawled_error_command = 'UPDATE `anto_answer_for_movie`.`movie_to_director` SET `is_crawled`=2 WHERE `director_id`={director_id};'
@@ -24,10 +21,10 @@ headers["Accept-Encoding"] = "gzip, deflate, br"
 headers["Accept-Language"] = "zh-CN,zh;q=0.8"
 headers["Cache-Control"] = "max-age=0"
 headers["Connection"] = "keep-alive"
-# headers["Cookie"] = 'bid=b6EaQ9gcbXs; ps=y; ll="108288"; push_noty_num=0; push_doumail_num=0; _vwo_uuid_v2=D3C2FB6BD3FAD43B7C1D2B91E3CE37570|d8b98c09fe9c97032f847bee2bc98501; ap=1; ct=y; __utmv=30149280.17596; __utma=30149280.634257426.1523865856.1523960361.1523969846.6; __utmc=30149280; __utmz=30149280.1523969846.6.4.utmcsr=accounts.douban.com|utmccn=(referral)|utmcmd=referral|utmcct=/safety/unlock_sms/resetpassword; __utmt=1; __utmb=30149280.1.10.1523969846; dbcl2="175968756:50qgoq3fF9c"; ck=V6_A; frodotk="36d0f6d8336d2689a472e4889a47739b"'
+# headers["Cookie"] = 'bid=b6EaQ9gcbXs; ps=y; ll="108288"; push_noty_num=0; push_doumail_num=0; _vwo_uuid_v2=D3C2FB6BD3FAD43B7C1D2B91E3CE37570|d8b98c09fe9c97032f847bee2bc98501; ap=1; ct=y; __utmv=30149280.17596; __utma=30149280.634257426.1523865856.1523960361.1523969846.6; __utmc=30149280; __utmz=30149280.1523969846.6.4.utmcsr=accounts.my_crawler.com|utmccn=(referral)|utmcmd=referral|utmcct=/safety/unlock_sms/resetpassword; __utmt=1; __utmb=30149280.1.10.1523969846; dbcl2="175968756:50qgoq3fF9c"; ck=V6_A; frodotk="36d0f6d8336d2689a472e4889a47739b"'
 
-headers["Host"] = "movie.douban.com"
-headers["Referer"] = "https://movie.douban.com/tag/"
+headers["Host"] = "movie.my_crawler.com"
+headers["Referer"] = "https://movie.my_crawler.com/tag/"
 # headers["Upgrade-Insecure-Requests"] = '1'
 headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.90 Safari/537.36 2345Explorer/9.3.0.17248"
 # proxies = {'https': 'https://223.241.78.75:18118', 'http': 'http://223.241.78.75:18118'}

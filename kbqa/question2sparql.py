@@ -3,12 +3,13 @@
 # @Author  : hujie
 # @Info  : 主要完成由问题到查询语句的转化
 
-from kbqa.spar_query_temp import QuestionSet   # 不能删除该行，动态调用时会用到
-from kbqa import word_tagging
-from keras.models import load_model
-from kbqa.data_helper import load_tokenizer, MAX_SEQUENCE_LENGTH
-from keras.preprocessing.sequence import pad_sequences
 import os
+
+from keras.models import load_model
+from keras.preprocessing.sequence import pad_sequences
+
+from kbqa import word_tagging
+from kbqa.data_helper import load_tokenizer, MAX_SEQUENCE_LENGTH
 
 # 类别与生成该类别问题的函数对应
 LABEL_TEMP_MAP = {
@@ -77,12 +78,11 @@ class Question2Sparql:
         word_objects = self.tw.get_word_objects(question)
         words_list = self.tw.get_cut_words(question)
         label = self.predict(words_list)
-        sparql = None
-        func = None
         if label is not -1:
             func = 'QuestionSet.' + LABEL_TEMP_MAP[label]
             sparql = fun_call(function_name=func, word_objects=word_objects)
-        return sparql, label, func  # TODO 待添加实体识别的结果
+            return sparql, label, func  # TODO 待添加实体识别的结果
+        return None, -1, None
 
     def predict(self, question_cut):
         """
@@ -105,8 +105,8 @@ def fun_call(function_name, word_objects):
 
 
 if __name__ == '__main__':
-    ques = [u'诺尔·费舍的生日是什么时候 ', u'成龙英文名', u'唐汉演过哪些电影？', u'电影功夫之王有哪些演员？']
+    ques = [u'功夫之王有哪些演员 ']
     q2s = Question2Sparql()
     for q in ques[:1]:
         my_query = q2s.get_sparql(q)
-        # print(my_query)
+        print(my_query)

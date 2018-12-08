@@ -21,15 +21,16 @@
     
 '''
 import logging
+import random
+import re
+import sys
 import time
 import traceback
-import random
 from imp import reload
+
 import bs4 as bs4
-import requests
-import re
 import pymysql
-import sys
+import requests
 from pymongo import MongoClient
 from requests import TooManyRedirects
 
@@ -40,10 +41,10 @@ ISOTIMEFORMAT = '%Y-%m-%d %X'
 logger = logging.getLogger('django')
 logger2 = logging.getLogger('kbqa')
 # 爬虫地址模板
-search_movies_url = 'https://movie.douban.com/j/new_search_subjects?sort=T&tags={tag}&genres={genres}&range=0,10&start={start}'
-movie_detail_url = 'https://movie.douban.com/subject/{movie_id}/'
-person_detail_url = 'https://movie.douban.com/celebrity/{person_id}/'
-movie_cast_url = 'https://movie.douban.com/subject/{movie_id}/celebrities'
+search_movies_url = 'https://movie.my_crawler.com/j/new_search_subjects?sort=T&tags={tag}&genres={genres}&range=0,10&start={start}'
+movie_detail_url = 'https://movie.my_crawler.com/subject/{movie_id}/'
+person_detail_url = 'https://movie.my_crawler.com/celebrity/{person_id}/'
+movie_cast_url = 'https://movie.my_crawler.com/subject/{movie_id}/celebrities'
 
 chinese_pattern = re.compile(u"[\u4e00-\u9fa5]+")  # 用于查找汉字，选取演员的中文名
 
@@ -84,8 +85,8 @@ headers["Accept-Encoding"] = "gzip, deflate, br"
 headers["Accept-Language"] = "zh-CN,zh;q=0.8"
 headers["Cache-Control"] = "max-age=0"
 headers["Connection"] = "keep-alive"
-headers["Host"] = "movie.douban.com"
-headers["Referer"] = "https://movie.douban.com/tag/"
+headers["Host"] = "movie.my_crawler.com"
+headers["Referer"] = "https://movie.my_crawler.com/tag/"
 # headers["Upgrade-Insecure-Requests"] = '1'
 # headers["Cookie"] ='ll="108288"; bid=dM_feEZKrY4; __utmc=30149280; push_noty_num=0; push_doumail_num=0; _vwo_uuid_v2=D6BDCF86A21B343E886B2B3F01CB6765A|05593d17f4e21ac1b80225e44a6951dc; ps=y; dbcl2="166543984:494OWebEoIU"; ck=WcR8; frodotk="7bc19ffe8e6830b17344dffbab389213"; ap=1; __utma=30149280.526320779.1524030827.1524030827.1524056360.2; __utmb=30149280.0.10.1524056360; __utmz=30149280.1524056360.2.2.utmcsr=baidu|utmccn=(organic)|utmcmd=organic'
 headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.90 Safari/537.36 2345Explorer/9.3.0.17248"
