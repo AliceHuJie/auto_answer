@@ -1,39 +1,38 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2018/12/8 12:44
 # @Author  : hujie
-# @Info  : 文件说明
+# @Info  : 电影爬虫
 import json
 import logging
+import re
 from urllib import parse
 
 from scrapy import Request, Selector, Spider
 
 from douban_spider.my_crawler.items import *
-# mongo数据库
 from douban_spider.my_crawler.settings import DEFAULT_REQUEST_HEADERS
 
-start = 0  # 起始页面
+year_list = list(range(2018, 1990, -1))
+country_list = ['中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大',
+                '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦']
 
 
 class MovieSpider(Spider):
     name = "movie"
+
     allowed_domains = ["movie.douban.com"]
-    film_listurl = 'https://movie.douban.com/j/new_search_subjects?sort={sorttype}&range=0,10&tags=%E7%94%B5%E5%BD%B1&start={page}&countries={country}'
+    # sort = R 按上映时间逆序
+    film_listurl = 'https://movie.douban.com/j/new_search_subjects?sort=R&range=0,10&tags={tag}&start={page}&countries={country}&year_range={year},{year}'
     film_url = 'https://movie.douban.com/subject/{id}/'
-    # 可选择的地区：中国大陆 美国 香港 台湾 日本 韩国 英国 法国 德国 意大利 西班牙 印度 泰国 俄罗斯 伊朗 加拿大 澳大利亚 爱尔兰 瑞典 巴西 丹麦
-    countrylist = ['中国大陆', '香港', '台湾']
-    year_list = range(1990, 2008)
-    # 可选择的排序方法
-    # U近期热门，S评分最高，R最新上映，T标记最多
-    sortlist = ['U', 'S', 'R', 'T']
+    tag = parse.quote('电影')
 
     def start_requests(self):
-        for sorttype in self.sortlist[:1]:
-            for country in self.countrylist[:1]:
-                country = parse.quote(country)
-                for i in range(1, 2):
-                    start = i * 20
-                    yield Request(self.film_listurl.format(page=start, country=country, sorttype=sorttype),
+        for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
+            country = parse.quote(country)
+            for year in year_list[:1]:  # len(year_list)
+                for page in range(0, 1):
+                    start = page * 20
+                    yield Request(self.film_listurl.format(tag=self.tag, country=country, year=year, page=start),
                                   headers=DEFAULT_REQUEST_HEADERS,
                                   callback=self.parse)
 
@@ -70,37 +69,45 @@ class MovieSpider(Spider):
             year = selector.xpath('//*[@id="content"]/h1/span[2]/text()').extract()[0][1:5]
         except IndexError:
             year = None
+
+        # 导演
+        director = selector.xpath('//*[@rel="v:directedBy"]/text()').extract()
+        director_href = selector.xpath('//*[@rel="v:directedBy"]/@href').extract()
+        director_ids = [re.findall('/celebrity/(.*)/', href)[0] for href in director_href]
+        # 编剧
+        scenarist = selector.xpath('//*[@id="info"]').re('编剧:</span>\s(.*)<br>')
+        # 演员
+        actor = selector.xpath('//*[@rel="v:starring"]/text()').extract()
+        # 演员ids
+        actor_href = selector.xpath('//*[@rel="v:starring"]/@href').extract()
+        actor_ids = [re.findall('/celebrity/(.*)/', href)[0] for href in actor_href]
+        # 类型
+        type = selector.xpath('//*[@property="v:genre"]/text()').extract()
         # 制片国家
         region = selector.xpath('//*[@id="info"]').re('制片国家/地区:</span>\s(.*)<br>')
         # 语言
         language = selector.xpath('//*[@id="info"]').re('语言:</span>\s(.*)<br>')
-        # 导演
-        director = selector.xpath('//*[@rel="v:directedBy"]/text()').extract()
-        # 类型
-        type = selector.xpath('//*[@property="v:genre"]/text()').extract()
-        # 演员
-        actor = selector.xpath('//*[@rel="v:starring"]/text()').extract()
         # 上映日期
         date = selector.xpath('//span[@property="v:initialReleaseDate"]/text()').extract()
         # 片长
         runtime = selector.xpath('//span[@property="v:runtime"]/text()').extract()
+        # 又名
+        alias = selector.xpath('//*[@id="info"]').re('又名:</span>\s(.*)<br>')
         # 评分
-        try:
-            rate = selector.xpath('//strong[@property="v:average"]/text()').extract()[0]
-        except IndexError:
-            rate = None
+        rate = selector.xpath('//strong[@property="v:average"]/text()').extract()
         # 评价人数
-        try:
-            rating_num = selector.xpath('//span[@property="v:votes"]/text()').extract()[0]
-        except IndexError:
-            rating_num = None
+        rating_num = selector.xpath('//span[@property="v:votes"]/text()').extract()
+        # 剧情简介
+        description = selector.xpath('//*[@id="link-report"]/span/text()').extract()
 
         film_info_item = MovieItem()
 
         field_map = {
-            'id': id, 'title': title, 'year': year, 'region': region, 'language': language,
-            'director': director, 'type': type, 'actor': actor, 'date': date,
-            'runtime': runtime, 'rate': rate, 'rating_num': rating_num
+            'id': id, 'title': title, 'year': year, 'region': ''.join(region), 'language': ''.join(language),
+            'director': director, 'type': type, 'actor': actor, 'date': '/'.join(date),
+            'runtime': ''.join(runtime), 'rate': ''.join(rate), 'rating_num': ''.join(rating_num),
+            'director_ids': director_ids,
+            'actor_ids': actor_ids, 'description': ''.join(description), 'scenarist': scenarist, 'alias': ''.join(alias)
         }
 
         for field, attr in field_map.items():

@@ -10,6 +10,7 @@ from douban_spider.my_crawler import settings
 
 class DoubanPipeline(object):
     def process_item(self, item, spider):
+        print(item)
         return item
 
 
@@ -40,6 +41,7 @@ class EnrolldataPipeline(object):
 
     def process_item(self, item, spider):
         self.exporter.export_item(item)
+        print(item)
         return item
 
     def close_spider(self, spider):

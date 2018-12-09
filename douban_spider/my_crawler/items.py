@@ -9,31 +9,40 @@ from scrapy import Field, Item
 
 
 class MovieItem(Item):
+    table = 'movie'
     id = Field()
     title = Field()
     year = Field()
+    director = Field()
+    director_ids = Field()
+    scenarist = Field()
+    actor = Field()
+    actor_ids = Field()
+    type = Field()
     region = Field()
     language = Field()
+    date = Field()
+    runtime = Field()
+    alias = Field()
+    rate = Field()
+    rating_num = Field()
+    description = Field()
+
+
+class ActorItem(Item):
+    table = 'actor'
+    id = Field()
+    title = Field()
+    year = Field()
     director = Field()
-    type = Field()
+    director_ids = Field()
     actor = Field()
+    actor_ids = Field()
+    type = Field()
+    region = Field()
+    language = Field()
     date = Field()
     runtime = Field()
     rate = Field()
     rating_num = Field()
-
-
-class PersonItem(Item):
-    collection = 'person'
-    id = Field()
-    title = Field()
-    year = Field()
-    region = Field()
-    language = Field()
-    director = Field()
-    type = Field()
-    actor = Field()
-    date = Field()
-    runtime = Field()
-    rate = Field()
-    rating_num = Field()
+    description = Field()
