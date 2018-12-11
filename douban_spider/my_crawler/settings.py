@@ -74,20 +74,18 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'my_crawler.pipelines.JsonExporterPipeline': 300,
-    'my_crawler.pipelines.EnrolldataPipeline': 300,
-
-    # 'my_crawler.pipelines.DoubanPipeline': 300,
-    #  'my_crawler.pipelines.MongoPipeline': 301,
+    # 'my_crawler.pipelines.JsonExporterPipeline': 300,
+    # 'my_crawler.pipelines.EnrolldataPipeline': 300,
+    'my_crawler.pipelines.MysqlPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = True
 # The initial download delay
-#AUTOTHROTTLE_START_DELAY = 5
+AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_MAX_DELAY = 60
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
 #AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
@@ -103,15 +101,20 @@ ITEM_PIPELINES = {
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 
-# MongoDB
+# Spider Log
+LOG_FILE = 'logs/spider.log'
+LOG_LEVEL = 'INFO'
+LOG_ENCODING = 'utf-8'
+LOG_STDOUT = 'False'
 
 
 # Mysql
 MYSQL_HOST = 'localhost'
-PORT = '3306'
+PORT = 3306
 MYSQL_DBNAME = 'auto_answer_for_movie'
 MYSQL_USER = 'root'
 MYSQL_PASSWD = '2736'
+
 # 代理池API接口
 # PROXY_URL = 'http://localhost:5555/random'
 

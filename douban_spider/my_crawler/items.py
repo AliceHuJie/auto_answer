@@ -16,6 +16,7 @@ class MovieItem(Item):
     director = Field()
     director_ids = Field()
     scenarist = Field()
+    scenarist_ids = Field()
     actor = Field()
     actor_ids = Field()
     type = Field()
@@ -29,20 +30,15 @@ class MovieItem(Item):
     description = Field()
 
 
-class ActorItem(Item):
-    table = 'actor'
+class PersonItem(Item):
+    table = 'person'
     id = Field()
-    title = Field()
-    year = Field()
-    director = Field()
-    director_ids = Field()
-    actor = Field()
-    actor_ids = Field()
-    type = Field()
-    region = Field()
-    language = Field()
-    date = Field()
-    runtime = Field()
-    rate = Field()
-    rating_num = Field()
-    description = Field()
+    name = Field()
+    gender = Field()
+    birthday = Field()
+    birthplace = Field()
+    biography = Field()
+    introduction = Field()
+    occupation = Field()
+    more_name = Field()
+    family = Field()
