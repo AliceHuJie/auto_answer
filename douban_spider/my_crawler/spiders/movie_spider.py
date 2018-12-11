@@ -20,7 +20,6 @@ country_list = ['中国大陆', '美国', '香港', '台湾', '日本', '韩国'
 
 class MovieSpider(Spider):
     name = "movie"
-
     allowed_domains = ["movie.douban.com"]
     # sort = R 按上映时间逆序
     film_listurl = 'https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags={tag}&start={page}&countries={country}&year_range={year},{year}'
@@ -28,10 +27,13 @@ class MovieSpider(Spider):
     tag = parse.quote('电影')
 
     def start_requests(self):
+        print('Movie Spider Start ...')
+        logging.info('Movie Spider Start ...')
         for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
             country = parse.quote(country)
             for year in year_list[:1]:  # len(year_list)
-                for page in range(0, 5):
+                for page in range(150, 500):
+                    logging.warn('country:' + country + ' year:' + year + ' page:' + page)
                     start = page * 20
                     yield Request(self.film_listurl.format(tag=self.tag, country=country, year=year, page=start),
                                   headers=DEFAULT_REQUEST_HEADERS,
@@ -54,8 +56,7 @@ class MovieSpider(Spider):
                     logging.getLogger(__name__).info("已获取电影id：%s %s" % (title, id))
                     # print("已获取电影id：%s %s" % (title, id))
                     yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
-
-                    # id = '30258067'  # 用于debug某一个电影爬取错误
+                    # id = 25765735
                     # yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
 
     def parse_film(self, response):
@@ -123,9 +124,9 @@ class MovieSpider(Spider):
                 'year': year,
                 'region': ''.join(region),
                 'language': ''.join(language),
-                'director': director,
-                'type': type,
-                'actor': actor,
+                'director': ''.join(director),
+                'type': ','.join(type),
+                'actor': ''.join(actor),
                 'date': '/'.join(date),
                 'runtime': ''.join(runtime),
                 'rate': ''.join(rate),
@@ -133,7 +134,7 @@ class MovieSpider(Spider):
                 'director_ids': director_ids,
                 'actor_ids': actor_ids,
                 'description': description,
-                'scenarist': scenarist,
+                'scenarist': ''.join(scenarist),
                 'scenarist_ids': scenarist_ids,
                 'alias': ''.join(alias)
             }
@@ -159,3 +160,4 @@ def extract_ids_from_hrefs(hrefs):
         if len(id_match) > 0:
             ids.append(id_match[0])
     return ids
+

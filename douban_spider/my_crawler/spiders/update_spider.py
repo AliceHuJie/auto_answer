@@ -18,7 +18,7 @@ country_list = ['中国大陆', '美国', '香港', '台湾', '日本', '韩国'
                 '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦']
 
 
-class MovieSpider(Spider):
+class MovieUpdateSpider(Spider):
     name = "movie_update"
 
     allowed_domains = ["movie.douban.com"]
@@ -28,6 +28,8 @@ class MovieSpider(Spider):
     tag = parse.quote('电影')
 
     def start_requests(self):
+        print('Movie Update Spider Start ...')
+        logging.info('Movie Update Spider Start ...')
         for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
             country = parse.quote(country)
             for year in year_list[:1]:  # len(year_list)
@@ -159,3 +161,4 @@ def extract_ids_from_hrefs(hrefs):
         if len(id_match) > 0:
             ids.append(id_match[0])
     return ids
+

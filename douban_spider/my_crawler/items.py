@@ -33,12 +33,14 @@ class MovieItem(Item):
 class PersonItem(Item):
     table = 'person'
     id = Field()
-    name = Field()
+    image = Field()
+    cn_name = Field()
+    fn_name = Field()
     gender = Field()
     birthday = Field()
     birthplace = Field()
     biography = Field()
     introduction = Field()
     occupation = Field()
-    more_name = Field()
-    family = Field()
+    more_cn_name = Field()
+    more_fn_name = Field()
