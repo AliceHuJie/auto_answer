@@ -100,5 +100,3 @@ class PersonSpider(Spider):
             logging.error('some error happened with crawl person : %s' % id)
             logging.error(traceback.print_exc(e))
             traceback.print_exc(e)
-
-# execute("scrapy crawl person -s LOG_FILE=../logs/person_spider.log".split())

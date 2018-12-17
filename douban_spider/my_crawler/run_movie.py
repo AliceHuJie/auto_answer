@@ -8,4 +8,5 @@ from scrapy.cmdline import execute
 
 time = datetime.now().strftime('%Y-%m-%d')
 log_file = 'logs/movie_spider' + time + '.log'
-execute(["scrapy", "crawl", "movie", "-s", "LOG_FILE=" + log_file])
+execute(["scrapy", "crawl", "movie", "-a", "deltafetch_reset=1", "-s", "LOG_FILE=" + log_file])
+# execute(["scrapy", "crawl", "movie", "-s", "LOG_FILE=" + log_file])

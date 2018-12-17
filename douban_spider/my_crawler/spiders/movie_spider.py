@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2018/12/8 12:44
 # @Author  : hujie
-# @Info  : 电影爬虫
+# @Info  : 从movie_crawer
+
 import json
 import logging
 import re
@@ -14,8 +15,9 @@ from douban_spider.my_crawler.items import *
 from douban_spider.my_crawler.settings import DEFAULT_REQUEST_HEADERS
 
 year_list = list(range(2018, 1990, -1))
-country_list = ['中国大陆', '美国', '香港', '台湾', '日本', '韩国', '英国', '法国', '德国', '意大利', '西班牙', '印度', '泰国', '俄罗斯', '伊朗', '加拿大',
-                '澳大利亚', '爱尔兰', '瑞典', '巴西', '丹麦']
+country_list = [u'中国大陆', u'美国', u'香港', u'台湾', u'日本', u'韩国', u'英国', u'法国', u'德国', u'意大利', u'西班牙', u'印度', u'泰国', u'俄罗斯',
+                u'伊朗', u'加拿大',
+                u'澳大利亚', u'爱尔兰', u'瑞典', u'巴西', u'丹麦']
 
 
 class MovieSpider(Spider):
@@ -30,12 +32,12 @@ class MovieSpider(Spider):
         print('Movie Spider Start ...')
         logging.info('Movie Spider Start ...')
         for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
-            country = parse.quote(country)
-            for year in year_list[:1]:  # len(year_list)
-                for page in range(150, 500):
-                    logging.warn('country:' + country + ' year:' + year + ' page:' + page)
+            c = parse.quote(country)
+            for year in year_list[1:2]:  # len(year_list)
+                for page in range(0, 100):
+                    logging.warn('country:' + country + ' year:' + str(year) + ' page:' + str(page))
                     start = page * 20
-                    yield Request(self.film_listurl.format(tag=self.tag, country=country, year=year, page=start),
+                    yield Request(self.film_listurl.format(tag=self.tag, country=c, year=year, page=start),
                                   headers=DEFAULT_REQUEST_HEADERS,
                                   callback=self.parse)
 
@@ -53,10 +55,10 @@ class MovieSpider(Spider):
                 for film in film_list:
                     id = film.get('id')  # 获取电影id
                     title = film.get('title')
-                    logging.getLogger(__name__).info("已获取电影id：%s %s" % (title, id))
+                    # logging.getLogger(__name__).info("已获取电影id：%s %s" % (title, id))
                     # print("已获取电影id：%s %s" % (title, id))
                     yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
-                    # id = 25765735
+                    # id = 30214034
                     # yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
 
     def parse_film(self, response):
@@ -98,7 +100,7 @@ class MovieSpider(Spider):
             actor_href = selector.xpath('//*[@rel="v:starring"]/@href').extract()
             actor_ids = extract_ids_from_hrefs(actor_href)
             # 类型
-            type = selector.xpath('//*[@property="v:genre"]/text()').extract()
+            genre = selector.xpath('//*[@property="v:genre"]/text()').extract()
             # 制片国家
             region = selector.xpath('//*[@id="info"]').re('制片国家/地区:</span>\s(.*)<br>')
             # 语言
@@ -122,21 +124,21 @@ class MovieSpider(Spider):
                 'id': id,
                 'title': title,
                 'year': year,
-                'region': ''.join(region),
-                'language': ''.join(language),
-                'director': ''.join(director),
-                'type': ','.join(type),
-                'actor': ''.join(actor),
-                'date': '/'.join(date),
-                'runtime': ''.join(runtime),
+                'region': ''.join(region).strip(),
+                'language': ''.join(language).strip(),
+                'director': '/'.join(director).strip(),
+                'genre': '/'.join(genre).strip(),  # 要作为字段存的都转为str
+                'actor': '/'.join(actor).strip(),
+                'date': '/'.join(date).strip(),
+                'runtime': ''.join(runtime).strip(),
                 'rate': ''.join(rate),
                 'rating_num': ''.join(rating_num),
-                'director_ids': director_ids,
-                'actor_ids': actor_ids,
+                'director_ids': director_ids,  # list
+                'actor_ids': actor_ids,  # list
                 'description': description,
-                'scenarist': ''.join(scenarist),
-                'scenarist_ids': scenarist_ids,
-                'alias': ''.join(alias)
+                'scenarist': '/'.join(scenarist),
+                'scenarist_ids': scenarist_ids,  # list
+                'alias': ''.join(alias).strip()
             }
 
             for field, attr in field_map.items():
@@ -160,4 +162,3 @@ def extract_ids_from_hrefs(hrefs):
         if len(id_match) > 0:
             ids.append(id_match[0])
     return ids
-

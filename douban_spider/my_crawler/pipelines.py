@@ -8,7 +8,8 @@ from scrapy.exporters import JsonItemExporter, CsvItemExporter
 
 from douban_spider.my_crawler import settings
 
-insert_or_update_movie_command = 'insert into movie (movie_id, title, myear, description, rate, sdate, runtime, alias, language, region, scenarists, directors, actors, rating_num, genre, update_time) VALUES ({movie_id},"{title}",{myear},"{description}",{rate},"{sdate}","{runtime}","{alias}","{language}","{region}","{scenarists}","{directors}","{actors}",{rating_num},"{genre}", "{update_time}") ON  duplicate KEY  UPDATE rate={rate}, sdate="{sdate}", myear={myear}, language="{language}", runtime="{runtime}", alias="{alias}",rating_num={rating_num}, update_time="{update_time}", description="{description}", scenarists="{scenarists}", region="{region}";'
+insert_or_update_movie_command = 'insert into movie (movie_id, title, myear, description, rate, sdate, runtime, alias, language, region, scenarists, directors, actors, rating_num, genre, update_time) VALUES ({movie_id},"{title}",{myear},"{description}",{rate},"{sdate}","{runtime}","{alias}","{language}","{region}","{scenarists}","{directors}","{actors}",{rating_num},"{genre}", "{update_time}") ON  duplicate KEY  UPDATE title = "{title}", myear = "{myear}", description="{description}", rate={rate}, sdate="{sdate}", runtime="{runtime}", alias="{alias}", language="{language}", region="{region}", scenarists="{scenarists}", directors="{directors}", actors="{actors}", rating_num={rating_num}, genre="{genre}",update_time="{update_time}";'
+
 insert_person_command = 'REPLACE INTO person(person_id,image,cn_name, fn_name, gender,birthday,birthplace,biography,introduction,occupation,more_cn_name,more_fn_name) VALUES({person_id},"{image}","{cn_name}","{fn_name}","{gender}","{birthday}","{birthplace}","{biography}","{introduction}","{occupation}","{more_cn_name}","{more_fn_name}")'
 insert_person_crawer_manager_command = 'INSERT IGNORE INTO person_crawer_manager(`person_id`)VALUES %s'  # %s可插入多条
 update_person_crawled_command = 'UPDATE person_crawer_manager SET `is_crawed`=1 WHERE `person_id`={person_id}'
@@ -81,12 +82,12 @@ class MysqlPipeline(object):
         self.cursor = self.connect.cursor()
 
     def process_item(self, item, spider):
-        if spider.name == 'movie':
+        if spider.name == 'movie' or spider.name == 'movie_update':
             movie_id = int(item['id'])
             try:
                 # movie info
-                rate = float(item['rate']) if item['rate'] is not '' else -1  # -1表示还没有评分数据
-                rating_num = int(item['rating_num']) if item['rating_num'] is not '' else -1  # -1表示暂无该项数据
+                rate = float(item['rate']) if item['rate'] is not '' else 0  # 0表示还没有评分数据
+                rating_num = int(item['rating_num']) if item['rating_num'] is not '' else 0  # 0表示暂无该项数据
                 myear = int(item['year']) if item['year'] is not '' else ''
                 movie_insert_or_update_sql = insert_or_update_movie_command.format(
                     movie_id=movie_id, title=item['title'],
@@ -96,7 +97,7 @@ class MysqlPipeline(object):
                     language=item['language'], region=item['region'],
                     scenarists=item['scenarist'], directors=item['director'],
                     actors=item['actor'], rating_num=rating_num,
-                    genre=type, update_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    genre=item['genre'], update_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 )
                 self.cursor.execute(movie_insert_or_update_sql)
 
@@ -129,29 +130,33 @@ class MysqlPipeline(object):
                     self.cursor.execute(movie_to_scenarist_insert_sql)
 
                 # movie_to_genre
-                if len(item['type']) > 0:
+                if item['genre'] is not '':
+                    genre_list = item['genre'].split('/')
                     multi_movie_to_genre = ''
-                    for genre in item['type']:
-                        multi_movie_to_genre += ' (%d, "%s"),' % (movie_id, genre)
+                    for genre in genre_list:
+                        if genre.strip() is not '':
+                            multi_movie_to_genre += ' (%d, "%s"),' % (movie_id, genre.strip())
                     movie_to_genre_insert_sql = insert_movie_to_genre_command % multi_movie_to_genre.strip(',')
                     # print(movie_to_genre_insert_sql)
                     self.cursor.execute(movie_to_genre_insert_sql)
 
                 # movie_to_region
-                region_list = item['region'].split('/')
-                if len(region_list) > 0:
+                if item['region'] is not '':
+                    region_list = item['region'].split('/')
                     multi_movie_to_region = ''
                     for region in region_list:
-                        multi_movie_to_region += ' (%d, "%s"),' % (movie_id, region.strip())
+                        if region.strip() is not '':
+                            multi_movie_to_region += ' (%d, "%s"),' % (movie_id, region.strip())
                     movie_to_region_insert_sql = insert_movie_to_region_command % multi_movie_to_region.strip(',')
                     self.cursor.execute(movie_to_region_insert_sql)
 
                 # movie_to_language
-                language_list = item['language'].split('/')
-                if len(language_list) > 0:
+                if item['language'] is not '':
+                    language_list = item['language'].split('/')
                     multi_movie_to_language = ''
                     for language in language_list:
-                        multi_movie_to_language += ' (%d, "%s"),' % (movie_id, language.strip())
+                        if language.strip() is not '':
+                            multi_movie_to_language += ' (%d, "%s"),' % (movie_id, language.strip())
                     movie_to_language_insert_sql = insert_movie_to_language_command % multi_movie_to_language.strip(',')
                     # print(movie_to_language_insert_sql)
                     self.cursor.execute(movie_to_language_insert_sql)
@@ -168,56 +173,6 @@ class MysqlPipeline(object):
                 self.connect.commit()
             except Exception as e:
                 logging.error('[MOVIE SPIDER]: ERROR IN INSERT MOVIE %s' % movie_id)
-                logging.error(traceback.print_exc(e))
-
-        elif spider.name == 'movie_update':  # 基本和movie爬取相同，可以去掉一些movie_to_actor, movie_to_director的插入. 这些信息不会更新
-            movie_id = int(item['id'])
-            try:
-                rate = float(item['rate']) if item['rate'] is not '' else -1  # -1表示还没有评分数据
-                rating_num = int(item['rating_num']) if item['rating_num'] is not '' else -1  # -1表示暂无该项数据
-                myear = int(item['year']) if item['year'] is not '' else ''
-
-                # movie info
-                movie_insert_or_update_sql = insert_or_update_movie_command.format(
-                    movie_id=movie_id, title=item['title'], myear=myear, description=item['description'],
-                    rate=rate, sdate=item['date'], runtime=item['runtime'], alias=item['alias'],
-                    language=item['language'], region=item['region'], scenarists=item['scenarist'],
-                    directors=item['director'], actors=item['actor'], rating_num=rating_num,
-                    genre=type, update_time=datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                )
-                self.cursor.execute(movie_insert_or_update_sql)
-
-                # movie_to_scenarist
-                if len(item['scenarist_ids']) > 0:
-                    multi_movie_to_scenarist = ''
-                    for scenarist_id in item['scenarist_ids']:
-                        multi_movie_to_scenarist += ' (%d, %d),' % (movie_id, int(scenarist_id))
-                    movie_to_scenarist_insert_sql = insert_movie_to_scenarist_command % multi_movie_to_scenarist.strip(
-                        ',')
-                    self.cursor.execute(movie_to_scenarist_insert_sql)
-
-                # movie_to_region
-                region_list = item['region'].split('/')
-                if len(region_list) > 0:
-                    multi_movie_to_region = ''
-                    for region in region_list:
-                        multi_movie_to_region += ' (%d, "%s"),' % (movie_id, region.strip())
-                    movie_to_region_insert_sql = insert_movie_to_region_command % multi_movie_to_region.strip(',')
-                    self.cursor.execute(movie_to_region_insert_sql)
-
-                # movie_to_language
-                language_list = item['language'].split('/')
-                if len(language_list) > 0:
-                    multi_movie_to_language = ''
-                    for language in language_list:
-                        multi_movie_to_language += ' (%d, "%s"),' % (movie_id, language.strip())
-                    movie_to_language_insert_sql = insert_movie_to_language_command % multi_movie_to_language.strip(',')
-                    self.cursor.execute(movie_to_language_insert_sql)
-
-                # 最后一起commit
-                self.connect.commit()
-            except Exception as e:
-                logging.error('[UPDATE MOVIE SPIDER]: ERROR IN UPDATE MOVIE %d' % movie_id)
                 logging.error(traceback.print_exc(e))
 
         elif spider.name == 'person':
@@ -237,7 +192,7 @@ class MysqlPipeline(object):
                     more_cn_name=item['more_cn_name'],
                     more_fn_name=item['more_fn_name'],
                 )
-                print(person_insert_sql)
+                # print(person_insert_sql)
                 self.cursor.execute(person_insert_sql)
                 self.cursor.execute(update_person_crawled_command.format(person_id=id))
                 self.connect.commit()

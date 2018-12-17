@@ -226,11 +226,11 @@ map:movie_to_actor__link a d2rq:PropertyBridge;
 # Table movie_to_country (n:m)
 map:movie_to_country__link a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
-        d2rq:property :showInCountry;
-        d2rq:refersToClassMap map:country;
+    d2rq:property :showInCountry;
+    d2rq:refersToClassMap map:country;
 	d2rq:join "movie_to_country.country_id => country.country_id";
 	d2rq:join "movie_to_country.movie_id => movie.movie_id";
-        .
+    .
 
 
 # Table movie_to_director (n:m)

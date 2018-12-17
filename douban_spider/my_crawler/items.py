@@ -19,7 +19,7 @@ class MovieItem(Item):
     scenarist_ids = Field()
     actor = Field()
     actor_ids = Field()
-    type = Field()
+    genre = Field()
     region = Field()
     language = Field()
     date = Field()
