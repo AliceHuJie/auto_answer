@@ -6,7 +6,8 @@
 nz代表电影专名
 nr代表人名。
 """
-import pandas as pd
+
+
 # df = pd.read_csv('./movie_title.csv')
 # title = df['movie_title'].values
 
@@ -37,10 +38,18 @@ def number2text():
     for line in open("../../data/number.txt", 'r', encoding='utf-8'):
         ns = line.split('.')
         number = u'点'.join(map(lambda c: m[int(c)], ns))
+        lines.append(line.strip('\n'))  # 多一倍数字，生成的问句中这种数字出现的概率大一点
         lines.append(line.strip('\n'))
-        lines.append(line.strip('\n') + u'分')
+        lines.append(line.strip('\n'))
         lines.append(number)
-        lines.append(number + u'分')
+        number = u'点'.join(ns)
+        lines.append(number.strip('\n'))
+        if len(ns) == 2:
+            number = u'点'.join([ns[0], m[int(ns[1])]])
+            lines.append(number.strip('\n'))
+            number = u'点'.join([m[int(ns[0])], ns[1]])
+            lines.append(number.strip('\n'))
+
     with open("number2.txt", 'w+', encoding='utf-8') as f:
         for line in lines:
             if line is not None:

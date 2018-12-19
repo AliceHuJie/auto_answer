@@ -33,9 +33,9 @@ class MovieSpider(Spider):
         logging.info('Movie Spider Start ...')
         for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
             c = parse.quote(country)
-            for year in year_list[1:2]:  # len(year_list)
-                for page in range(0, 100):
-                    logging.warn('country:' + country + ' year:' + str(year) + ' page:' + str(page))
+            for year in year_list[6:10]:  # len(year_list)
+                for page in range(0, 500):
+                    # logging.warn('country:' + country + ' year:' + str(year) + ' page:' + str(page))
                     start = page * 20
                     yield Request(self.film_listurl.format(tag=self.tag, country=c, year=year, page=start),
                                   headers=DEFAULT_REQUEST_HEADERS,
@@ -58,7 +58,7 @@ class MovieSpider(Spider):
                     # logging.getLogger(__name__).info("已获取电影id：%s %s" % (title, id))
                     # print("已获取电影id：%s %s" % (title, id))
                     yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
-                    # id = 30214034
+                    # id = 30295131
                     # yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
 
     def parse_film(self, response):
@@ -128,7 +128,7 @@ class MovieSpider(Spider):
                 'language': ''.join(language).strip(),
                 'director': '/'.join(director).strip(),
                 'genre': '/'.join(genre).strip(),  # 要作为字段存的都转为str
-                'actor': '/'.join(actor).strip(),
+                'actor': '/'.join(actor).replace("\"", '').strip(),
                 'date': '/'.join(date).strip(),
                 'runtime': ''.join(runtime).strip(),
                 'rate': ''.join(rate),
@@ -138,7 +138,7 @@ class MovieSpider(Spider):
                 'description': description,
                 'scenarist': '/'.join(scenarist),
                 'scenarist_ids': scenarist_ids,  # list
-                'alias': ''.join(alias).strip()
+                'alias': ''.join(alias).strip().replace("\"", '“')
             }
 
             for field, attr in field_map.items():

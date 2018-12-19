@@ -3,20 +3,29 @@
 # @Author  : hujie
 # @Info  : 生成分类训练数据
 
-import pandas as pd
-import numpy as np
-import re
 import os
+import re
+
+import numpy as np
+import pandas as pd
+
 from kbqa.word_tagging import Tagger, Word
 
 movie_name_df = pd.read_table('../data/movie.txt', header=None, sep=" ", encoding='utf-8')
 actor_name_df = pd.read_table('../data/name2.txt', header=None, sep=" ", encoding='utf-8')   # name2 增加了外文名
 genre_name_df = pd.read_table('../data/genres.txt', header=None, sep=" ", encoding='utf-8')
 number_value_df = pd.read_table('../data/number2.txt', header=None, sep=" ", encoding='utf-8')  # number2中的分数增加了中文表达
+language_value_df = pd.read_table('../data/language.txt', header=None, sep=" ", encoding='utf-8', error_bad_lines=False)
+region_value_df = pd.read_table('../data/region.txt', header=None, sep=" ", encoding='utf-8', error_bad_lines=False)
+year_value_df = pd.read_table('../data/year.txt', header=None, sep=" ", encoding='utf-8', error_bad_lines=False)
+
 movie_name_array = np.array(movie_name_df[0])
 actor_name_array = np.array(actor_name_df[0])
 genre_name_array = np.array(genre_name_df[0])
 number_value_array = np.array(number_value_df[0])
+language_name_array = np.array(language_value_df[0])
+region_name_array = np.array(region_value_df[0])
+year_value_array = np.array(year_value_df[0])
 
 
 def is_chinese_name(check_name):
@@ -163,10 +172,16 @@ def fill_question(ques_temp):
         question = question.replace('ng', np.random.choice(genre_name_array))
     if question.find('x') != -1:  # 替换评分值
         question = question.replace('x', str(np.random.choice(number_value_array)))
+    if question.find('yy') != -1:  # 替换年份
+        question = question.replace('yy', str(np.random.choice(year_value_array)))
+    if question.find('ll') != -1:  # 替换语言
+        question = question.replace('ll', str(np.random.choice(language_name_array)))
+    if question.find('rr') != -1:  # 替换地区
+        question = question.replace('rr', str(np.random.choice(region_name_array)))
     return question
 
 
-def get_questions_for_w2vtrain():
+def __get_questions_for_w2vtrain():
     """
     从tagged_data中取出问题那一列，保存到data/w2v/data中。就可以和其他的个人简介等内容，一起做分词和向量训练
     :return: 
@@ -180,10 +195,16 @@ def get_questions_for_w2vtrain():
 
 
 def train_data_cut():
+    """
+    先从tagged_data中提取问题，放入question.txt 。在对问题进行切词处理
+    :return: 
+    """
+    __get_questions_for_w2vtrain()  # 先提取出问题到
     tagger = Tagger()
     path = '../data/w2vdata/'
     output_file = open(path + 'word_cut_data.txt', 'w+', encoding='utf-8')
-    input_files = ['actor_introduction.txt', 'movie_introduction.txt', 'director_introduction.txt', 'questions.txt']
+    # input_files = ['actor_introduction.txt', 'movie_introduction.txt', 'director_introduction.txt', 'questions.txt']
+    input_files = ['questions.txt']
     line_num = 0
     for file_name in input_files:
         file = path + file_name
@@ -229,7 +250,7 @@ def gen_annotation_questions():
     :return: 
     """
     ques_temp_df = pd.read_table('../data/all_question_temp.txt', header=None, sep=" ", encoding='utf-8')
-    with open('../data/annotation_data_test.txt', 'a+', encoding='utf8') as f:
+    with open('../data/ner_data/annotation_data.txt', 'a+', encoding='utf8') as f:
         for index in ques_temp_df.index:  # 逐行遍历模板问题
             temp = ques_temp_df.iloc[index, 1]
             letters, labels = fill_and_annotation_question(temp)
@@ -245,13 +266,17 @@ def fill_and_annotation_question(ques_temp):
     :return: (letters, labels) 填充后问题的每个字及其对应label
     """
     question = ques_temp
-    while question.find('ng') != -1:  # 替换类型名
-        question = question.replace('ng', np.random.choice(genre_name_array), 1)
-    while question.find('x') != -1:  # 替换评分值
-        question = question.replace('x', str(np.random.choice(number_value_array)), 1)
-
     letters = []
-    labels = ['O'] * len(question)  # 此时问句模板中只含nr, nz需要替换
+    labels = ['O'] * len(question)  # 此时问句模板中只含nr, nz, x需要替换
+    if question.find('ng') != -1:  # 替换类型名
+        question = question.replace('ng', np.random.choice(genre_name_array))
+    if question.find('x') != -1:  # 替换评分值
+        index = question.find('x')
+        num = str(np.random.choice(number_value_array))
+        question = question.replace('x', num, 1)
+        sub = ['B-NUM'] + ['I-NUM'] * (len(num) - 1)
+        labels[index:index + 1] = sub  # x只占了一位，所以这里是加1
+
     while question.find('nr') != -1:  # 多个人名
         index = question.find('nr')
         actor = np.random.choice(actor_name_array)
@@ -259,24 +284,41 @@ def fill_and_annotation_question(ques_temp):
         question = question.replace('nr', actor, 1)
         sub = ['B-PER'] + ['I-PER'] * (len(actor) - 1)
         labels[index:index+2] = sub
+
     while question.find('nz') != -1:  # 替换电影名
         index = question.find('nz')
         movie = np.random.choice(movie_name_array)
         question = question.replace('nz', movie, 1)
         sub = ['B-MV'] + ['I-MV'] * (len(movie) - 1)
         labels[index:index+2] = sub
+
+    if question.find('yy') != -1:  # 替换年份
+        index = question.find('yy')
+        year = np.random.choice(year_value_array)
+        question = question.replace('yy', year, 1)
+        sub = ['B-DATE'] + ['I-DATE'] * (len(year) - 1)
+        labels[index:index + 2] = sub
+    if question.find('ll') != -1:  # 替换语言
+        question = question.replace('ll', str(np.random.choice(language_name_array)))
+    if question.find('rr') != -1:  # 替换地区
+        question = question.replace('rr', str(np.random.choice(region_name_array)))
     letters = list(map(str, question))  # 每个字的列表
     return letters, labels
 
 
 if __name__ == '__main__':
     # generate_all_question_temp()
-    for i in range(6):
-        generate_train_data()
+    # for i in range(10):
+    #     generate_train_data()
     # for i in range(1, 59):
     #     generate_train_data()
     #     print('one time done')
     # get_questions_for_w2vtrain()
-    # train_data_cut()
+    # for i in range(10):
+    #     gen_annotation_questions()
+    train_data_cut()
     # get_random_score()
     # get_all_chinese_na me()
+    # l, la = fill_and_annotation_question('ng类型，ll的电影有多少分数大于x')
+    # print(l)
+    # print(la)

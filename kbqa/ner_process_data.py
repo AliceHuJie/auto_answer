@@ -3,11 +3,12 @@
 # @Author  : hujie
 # @Info  :  命名实体识别的数据预处理（基于字）
 
-import numpy
-from collections import Counter
-from keras.preprocessing.sequence import pad_sequences
 import pickle
 import platform
+from collections import Counter
+
+import numpy
+from keras.preprocessing.sequence import pad_sequences
 
 train_data = '../data/ner_data/annotation_data.txt'
 text_data = '../data/ner_data/annotation_data_test.txt'
@@ -20,7 +21,7 @@ def load_data():
 
     word_counts = Counter(row[0].lower() for sample in train for row in sample)
     vocab = [w for w, f in iter(word_counts.items()) if f >= 2]
-    chunk_tags = ['O', 'B-PER', 'I-PER', 'B-MV', 'I-MV']
+    chunk_tags = ['O', 'B-PER', 'I-PER', 'B-MV', 'I-MV', 'B-NUM', 'I-NUM', 'B-DATE', 'I-DATE']
 
     # save initial config data
     with open(config_path, 'wb') as outp:

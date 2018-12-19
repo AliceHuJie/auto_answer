@@ -3,11 +3,10 @@
 # @Author  : hujie
 # @Info  : 定义Word类的结构；定义Tagger类，实现自然语言转为Word对象的方法。结合词典进行分词
 
-import jieba
-import jieba.posseg as pseg
 import os
 
-from kbqa.spar_query_temp import QuestionSet
+import jieba
+import jieba.posseg as pseg
 
 cur_path = os.path.dirname(os.path.abspath(__file__))
 movie_dict_path = os.path.join(cur_path, 'user_dicts\\movie_title.txt')
@@ -25,7 +24,7 @@ class Word(object):
 class Tagger:
     def __init__(self, extra_dict_paths=None):
         # 加载自定义的词典
-        my_dicts = [movie_dict_path, name_dict_path, genre_dict_path]
+        my_dicts = [movie_dict_path, name_dict_path, genre_dict_path, number_dict_path]
         for p in my_dicts:
             jieba.load_userdict(p)
 
@@ -77,15 +76,26 @@ class Tagger:
         number = ''
         for word in word_objects:
             if word.pos == 'ss':
-                s = word.token.strip(u'分')
-                for c in s:
-                    if c.isdigit():
-                        number += c
-                    else:
-                        number += str(m.get(c))
-                word.token = number
+                if Tagger.is_number(word.token):
+                    return word_objects
+                else:
+                    s = word.token.strip(u'分')
+                    for c in s:
+                        if c.isdigit():
+                            number += c
+                        else:
+                            number += str(m.get(c))
+                    word.token = number
             new_word_objects.append(Word(word.token, word.pos))
         return new_word_objects
+
+    @staticmethod
+    def is_number(s):
+        try:
+            float(s)
+            return True
+        except ValueError:
+            return False
 
     @staticmethod
     def alias2name(word_objects):
@@ -95,7 +105,7 @@ class Tagger:
 
 
 if __name__ == '__main__':
-    question = u"胡婕的导演"
+    question = u"100零一夜评分高于8.5的电影"
     # words = jieba.cut(question)
     # for word in words:
     #

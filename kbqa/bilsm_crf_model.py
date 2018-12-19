@@ -1,9 +1,11 @@
-from keras.models import Sequential
-from keras.layers import Embedding, Bidirectional, LSTM
-from keras_contrib.layers import CRF
-import matplotlib.pyplot as plt
 import pickle
+
+import matplotlib.pyplot as plt
 import numpy as np
+from keras.layers import Embedding, Bidirectional, LSTM
+from keras.models import Sequential
+from keras_contrib.layers import CRF
+
 from kbqa import ner_process_data
 
 EMBED_DIM = 100
@@ -89,23 +91,28 @@ def annotation_slot(predict_text):
 
     per_list = []
     mv_list = []
-    per, mv = '', ''
+    per, mv, num = '', '', ''
     for s, t in zip(predict_text, result_tags):
         if t in ('B-PER', 'I-PER'):
             per += ' ' + s if (t == 'B-PER') else s
         if t in ('B-MV', 'I-MV'):
             mv += ' ' + s if (t == 'B-MV') else s
+        if t in ('B-NUM', 'I-NUM'):
+            num += ' ' + s if (t == 'B-NUM') else s
     per = per.strip()
     mv = mv.strip()
+    num = num.strip()
     if per is not '':
         per_list = per.split(' ')
     if mv is not '':
         mv_list = mv.split(' ')
-    return per_list, mv_list
+    if num is not '':
+        num_list = num.split(' ')
+    return per_list, mv_list, num_list
 
 
 if __name__ == '__main__':
-    # train()
-    pers, mvs = annotation_slot('电影我爱西南交大演员有哪些吗？')
-    print(pers)
-    print(mvs)
+    train()
+    # pers, mvs = annotation_slot('电影我爱西南交大演员有哪些吗？')
+    # print(pers)
+    # print(mvs)

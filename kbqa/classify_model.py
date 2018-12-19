@@ -3,28 +3,31 @@
 # @Author  : hujie
 # @Info  : 各种分类模型的训练
 
-from keras.layers import Dense, Flatten, Dropout, LSTM
+import pickle
+
+import matplotlib.pyplot as plt
+import numpy as np
+from gensim.models import word2vec
 from keras.layers import Conv1D, MaxPooling1D, Embedding
+from keras.layers import Dense, Flatten, Dropout, LSTM
 from keras.models import Sequential
 from keras.utils import plot_model
-from gensim.models import word2vec
 from sklearn import metrics
+from sklearn.externals import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
-from kbqa.data_helper import load_tokenizer, MAX_SEQUENCE_LENGTH, load_data, onehot_to_category
-import numpy as np
-import matplotlib.pyplot as plt
-import pickle
 from sklearn.svm import SVC
 
+from kbqa.data_helper import load_tokenizer, MAX_SEQUENCE_LENGTH, load_data, onehot_to_category
 
 EMBEDDING_DIM = 100  # 每个词对应的词向量的维度
 model_path = '../data/classify_model/'
 tokenizer, word_index = load_tokenizer()
 w2v_model_path = '../data/w2v_model/movie_field.model'
 predict_output_path = '../data/classify_data/predict_output/'
+compare_png_path = '../data/classify_data/compare_pngs/'
 # 要比较的模型
-model_name_list = ['cnn', 'cnn_w2c', 'lr_1', 'lr_2', 'lstm', 'lstm_w2c', 'mlp', 'nb_1', 'nb_2', 'svm_1', 'svm_2']
+model_name_list = ['cnn', 'cnn_w2c', 'lstm', 'lstm_w2c', 'mlp', 'lr_1', 'lr_2', 'nb_1', 'nb_2', 'svm_1', 'svm_2']
 
 
 def train_cnn_classify():
@@ -233,8 +236,9 @@ def train_nb_2():
     model.fit(x_train, y_train)
     y_preds = model.predict(x_test)
     y_scores = model.predict_proba(x_test)
-    print(metrics.classification_report(onehot_to_category(y_test), y_preds))
     save_predict_output(y_test, y_preds, y_scores, 'nb_2')
+    print(metrics.classification_report(onehot_to_category(y_test), y_preds))
+
 
 
 def train_svm_1():
@@ -244,8 +248,10 @@ def train_svm_1():
     svm.fit(x_train, y_train)
     y_preds = svm.predict(x_test)
     y_scores = svm.predict_proba(x_test)  # 以一个测试为例，看一下决策距离的对应结果是什么
-    print(metrics.classification_report(onehot_to_category(y_test), y_preds))
     save_predict_output(y_test, y_preds, y_scores, 'svm_1')
+    print(metrics.classification_report(onehot_to_category(y_test), y_preds))
+    model_name = ''.join([model_path, 'svm.m'])
+    joblib.dump(svm, model_name)
 
 
 def train_svm_2():
@@ -332,8 +338,9 @@ def plot_roc(model_list, fpr, tpr, auc):
     plt.grid(b=True, ls=':')
     plt.legend(loc='lower right', fancybox=True, framealpha=0.8, fontsize=12)
     plt.title(u'ROC and AUC', fontsize=17)
-    plt.show()
-
+    # plt.show()
+    plt.savefig(compare_png_path + 'roc.png')
+    print('ROC - Curve saved ... ')
 
 def plot_pr(model_list, recall, precision, average_precision):
     """
@@ -360,7 +367,9 @@ def plot_pr(model_list, recall, precision, average_precision):
     plt.ylabel('Precision')
     plt.legend(loc='lower right', fancybox=True, framealpha=0.8, fontsize=12)
     plt.title('Average precision score, micro-averaged over all classes')
-    plt.show()
+    # plt.show()
+    plt.savefig(compare_png_path + 'pr.png')
+    print('PR - Curve saved ... ')
 
 
 def save_predict_output(y_test, y_preds, y_scores, filename):
@@ -414,9 +423,8 @@ def compare_model(model_list):
         # print(metrics.classification_report(y_true, y_preds))
         # print('Confusion Matrix...')
         # print(metrics.confusion_matrix(y_true, y_preds))
-
         fpr[i], tpr[i], thresholds = metrics.roc_curve(y_true.ravel(), y_scores.reshape(-1, 1).ravel())
-        # y_test是one_hot, y_pred是概率, micro 方式计算fpr, tpr, threshold
+        # y_true 是one_hot, y_scores, micro 方式计算fpr, tpr, threshold
         auc[i] = metrics.auc(fpr[i], tpr[i])   # 手动计算auc
         # auc2 = metrics.roc_auc_score(y_true, y_preds, average='micro')  # 直接由预测结果和真实结果调用函数计算auc
 
@@ -455,5 +463,6 @@ if __name__ == '__main__':
     # train_svm_2()
     # train_lr_1()
     # train_lr_2()
-    # compare_model(model_name_list)
-    compare_report(model_name_list)
+    compare_model(model_name_list[5:])
+    # print(model_name_list[5:])
+    # compare_report(model_name_list[5:])

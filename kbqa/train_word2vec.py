@@ -15,9 +15,9 @@ def generate_model():
 
 def test_model():
     model = word2vec.Word2Vec.load('../data/w2v_model/movie_field.model')
-    # s = model.most_similar('出演')
-    print(model.wv.vocab)
-    # print(s)
+    s = model.most_similar('出演')
+    # print(model.wv.vocab)
+    print(s)
     # vec = model['生日']
     # print(vec)
     # print(model.wv['生日'])
@@ -26,4 +26,5 @@ def test_model():
     # print(model.similarity('成龙', '李连杰'))
 
 if __name__ == '__main__':
-    generate_model()
+    # generate_model()
+    test_model()

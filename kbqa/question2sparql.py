@@ -7,6 +7,7 @@ import os
 
 from keras.models import load_model
 from keras.preprocessing.sequence import pad_sequences
+from sklearn.externals import joblib
 
 from kbqa import word_tagging
 from kbqa.data_helper import load_tokenizer, MAX_SEQUENCE_LENGTH
@@ -37,21 +38,11 @@ LABEL_TEMP_MAP = {
     18: 'has_movie_question',  # 不含评分条件 指定条件下有哪些电影
     19: 'has_movie_gt_question',  # 评分高于多少分的电影 指定条件下有哪些电影
     20: 'has_movie_lt_question',  # 评分低于多少分的电影 指定条件下有哪些电影
-        #  把下面的细类的归到上面几类中去
-        # 18: 'director_direct_movies_question',  # 导演导了哪些电影
-        # 19: 'genres_contains_movies_question',  # 某类型的电影有哪些 演员演过的某类型的电影有哪些归为一类
-        # 20: 'type_movie_by_actor_question',  # 演员演过的某类型的电影有哪些,问电影
-        # 24: 'movie_gt_by_actor_question',  # 演员演过的高于多少分的电影
-        # 25: 'movie_lt_by_actor_question',  # 演员演过的低于多少分的电影
-        # 21: 'movies_by_actors_question',  # 合作演出的电影有哪些,可以是多个演员，不定槽位
-
-        # 12: 'how_many_movie_by_actor_question',  # 演员演过多少部电影  不要了，因为数目不正确
-        # 14: 'movie_all_info_question',  # 电影的详细信息   不要了
     21: 'cooperate_actors_question',  # 某演员合作过的有哪些演员
 }
 
 cur_path = os.path.dirname(os.path.abspath(__file__))
-model_name = 'cnn_model.h5'  # 使用的分类模型的名字 cnn_model.h5 word_vector_cnn_model.h5 lstm_model.h5 word_vector_lstm_model.h5
+model_name = 'word_vector_cnn_model.h5'  # 使用的分类模型的名字 cnn_model.h5 word_vector_cnn_model.h5 lstm_model.h5 word_vector_lstm_model.h5
 model_path = os.path.abspath(os.path.join(cur_path, '..\\data\\classify_model'))
 model_file = '\\'.join([model_path, model_name])
 pro_threshold = 0.75  # soft 之后得到的属于各分类的概率。该阈值的设定使得softmax的最大值小于该值时判定为类别无关
@@ -99,14 +90,37 @@ class Question2Sparql:
         max_pro = max(output[0])
         return label[0] if max_pro > pro_threshold else -1
 
+    def sklearn_predict(self, question):
+        """
+        使用svm, nb这些普通机器学习模型来预测问句的分类
+        :param question_cut: 
+        :return: 
+        """
+        words_list = self.tw.get_cut_words(question)
+        question = [' '.join(words_list)]
+        tokenizer, word_index = load_tokenizer(1)
+        data = tokenizer.texts_to_matrix(question)
+        model_name = '\\'.join([model_path, 'svm.m'])
+        model = joblib.load(model_name)
+        label = model.predict(data)
+        proba = model.predict_proba(data)
+        print(proba)
+        return label[0]
+
+    @staticmethod
+    def rewrite_question(word_objects):
+        pass
 
 def fun_call(function_name, word_objects):
     return eval(function_name)(word_objects)  # 根据函数名动态调用
 
 
 if __name__ == '__main__':
-    ques = [u'功夫之王有哪些演员 ']
+    ques = [u'范冰冰出演的电影 ']
     q2s = Question2Sparql()
-    for q in ques[:1]:
-        my_query = q2s.get_sparql(q)
-        print(my_query)
+    label1 = q2s.sklearn_predict(ques[0])
+    label2 = q2s.predict(ques[0])
+    print(label1, label2)
+    # for q in ques[:1]:
+    #     my_query = q2s.get_sparql(q)
+    #     print(my_query)

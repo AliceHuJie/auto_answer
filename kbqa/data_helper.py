@@ -4,15 +4,16 @@
 # @Info  :  分类模型的问句预处理（基于词）：从原始问句，生成数据化的数据集，供后续embedding层使用
 
 
-from kbqa.word_tagging import Tagger
-from keras.preprocessing.text import Tokenizer
+import os
+import pickle
+
+import numpy as np
 from keras.preprocessing.sequence import pad_sequences
+from keras.preprocessing.text import Tokenizer
 from keras.utils import to_categorical
 from sklearn.externals import joblib
-import numpy as np
-import pickle
-import os
 
+from kbqa.word_tagging import Tagger
 
 MAX_SEQUENCE_LENGTH = 20  # 句子的最大长度，句子转ids时，长度不足的补0
 VALIDATION_SPLIT = 0.33  # 验证集的比例   训练集占0.8
@@ -129,32 +130,15 @@ def load_data(method=0):
     return x_train, y_train, x_val, y_val, x_test, y_test
 
 
-def load_tokenizer():
+def load_tokenizer(method=0):
     """
     反序列文件中的tokenizer对象
     :return: tokenizer, word_index
     """
-    method = 0   # 只有方式0会用到load_tokenizer目前
     with open(TOKENIZER_SAVE_PATH + str(method), 'rb') as f:
         tokenizer = pickle.load(f)
         word_index = tokenizer.word_index
     return tokenizer, word_index
-
-
-def batch_iter():
-    """
-    成批生成训练数据
-    :return: 
-    """
-    pass
-
-
-def shuffle_question():
-    """
-    把tagged_data中的数据打乱，生成shuffled_tagged_data.txt
-    :return: 
-    """
-    pass
 
 
 def onehot_to_category(onehot):
