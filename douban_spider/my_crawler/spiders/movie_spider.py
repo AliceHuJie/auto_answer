@@ -31,9 +31,9 @@ class MovieSpider(Spider):
     def start_requests(self):
         print('Movie Spider Start ...')
         logging.info('Movie Spider Start ...')
-        for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
+        for country in country_list[1:]:  # 国家在前，先爬完一个国家所有年份的电影
             c = parse.quote(country)
-            for year in year_list[6:10]:  # len(year_list)
+            for year in year_list[0:5]:  # len(year_list)
                 for page in range(0, 500):
                     # logging.warn('country:' + country + ' year:' + str(year) + ' page:' + str(page))
                     start = page * 20
@@ -58,7 +58,7 @@ class MovieSpider(Spider):
                     # logging.getLogger(__name__).info("已获取电影id：%s %s" % (title, id))
                     # print("已获取电影id：%s %s" % (title, id))
                     yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
-                    # id = 30295131
+                    # id = 1297607
                     # yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
 
     def parse_film(self, response):
@@ -74,6 +74,10 @@ class MovieSpider(Spider):
             selector = Selector(response=response)
             # 电影名字
             title = selector.xpath('//span[@property="v:itemreviewed"]/text()').extract()[0]
+            alias_extra = ''
+            if len(title.split(' ')) > 0:
+                alias_extra = ' '.join(title.split(' ')[1:])
+                title = title.split(' ')[0]
             # 年份
             try:
                 year = selector.xpath('//*[@id="content"]/h1/span[2]/text()').extract()[0][1:5]
@@ -111,6 +115,9 @@ class MovieSpider(Spider):
             runtime = selector.xpath('//span[@property="v:runtime"]/text()').extract()
             # 又名
             alias = selector.xpath('//*[@id="info"]').re('又名:</span>\s(.*)<br>')
+            alias = ''.join(alias).strip().replace("\"", '“')
+            if alias_extra is not '':
+                alias = alias_extra + '/' + alias
             # 评分
             rate = selector.xpath('//strong[@property="v:average"]/text()').extract()
             # 评价人数
@@ -138,7 +145,7 @@ class MovieSpider(Spider):
                 'description': description,
                 'scenarist': '/'.join(scenarist),
                 'scenarist_ids': scenarist_ids,  # list
-                'alias': ''.join(alias).strip().replace("\"", '“')
+                'alias': alias
             }
 
             for field, attr in field_map.items():

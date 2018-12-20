@@ -10,7 +10,7 @@ from kbqa import ner_process_data
 
 EMBED_DIM = 100
 BiRNN_UNITS = 200
-EPOCHS = 30   # 训练的轮数
+EPOCHS = 3  # 训练的轮数
 config_path = '../data/ner_model/config.pkl'
 ner_model_path = '../data/ner_model/crf.h5'
 acc_pic_path = '../data/ner_model/loss_acc.png'
@@ -47,7 +47,7 @@ def train():
     """
     model, (train_x, train_y), (test_x, test_y) = create_model()
     history = model.fit(train_x, train_y, batch_size=16, epochs=EPOCHS,
-              validation_data=[test_x, test_y])
+                        validation_data=[test_x, test_y])
     model.save(ner_model_path)
 
     plt.figure()
@@ -82,16 +82,14 @@ def annotation_slot(predict_text):
     :return: 
     """
     model, (vocab, chunk_tags) = create_model(train=False)
-    idx, length = ner_process_data.process_data(predict_text, vocab)    # 问句依靠词汇表转成idx
+    idx, length = ner_process_data.process_data(predict_text, vocab)  # 问句依靠词汇表转成idx
     model.load_weights(ner_model_path)
     raw = model.predict(idx)[0][-length:]
     result = [np.argmax(row) for row in raw]
     result_tags = [chunk_tags[i] for i in result]
     print(result_tags)
 
-    per_list = []
-    mv_list = []
-    per, mv, num = '', '', ''
+    per, mv, num, year = '', '', '', ''
     for s, t in zip(predict_text, result_tags):
         if t in ('B-PER', 'I-PER'):
             per += ' ' + s if (t == 'B-PER') else s
@@ -99,20 +97,21 @@ def annotation_slot(predict_text):
             mv += ' ' + s if (t == 'B-MV') else s
         if t in ('B-NUM', 'I-NUM'):
             num += ' ' + s if (t == 'B-NUM') else s
-    per = per.strip()
-    mv = mv.strip()
-    num = num.strip()
+        if t in ('B-DATE', 'I-DATE'):
+            year += ' ' + s if (t == 'B-DATE') else s
+
     if per is not '':
-        per_list = per.split(' ')
-    if mv is not '':
-        mv_list = mv.split(' ')
-    if num is not '':
-        num_list = num.split(' ')
-    return per_list, mv_list, num_list
+        per = per.strip().split(' ')
+
+    return {
+        'pers': per,
+        'mv': mv.strip().split(' ')[0],
+        'num': num.strip().split(' ')[0],
+        'year': year.strip().split(' ')[0]
+    }
 
 
 if __name__ == '__main__':
-    train()
-    # pers, mvs = annotation_slot('电影我爱西南交大演员有哪些吗？')
-    # print(pers)
-    # print(mvs)
+    # train()
+    r = annotation_slot('cry woman评分怎么样')
+    print(r)

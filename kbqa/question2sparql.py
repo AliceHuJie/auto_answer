@@ -10,6 +10,7 @@ from keras.preprocessing.sequence import pad_sequences
 from sklearn.externals import joblib
 
 from kbqa import word_tagging
+from kbqa.bilsm_crf_model import annotation_slot
 from kbqa.data_helper import load_tokenizer, MAX_SEQUENCE_LENGTH
 
 # 类别与生成该类别问题的函数对应
@@ -85,10 +86,11 @@ class Question2Sparql:
         seq = self.tokenizer.texts_to_sequences(question)
         data = pad_sequences(seq, maxlen=MAX_SEQUENCE_LENGTH)
         label = self.model.predict_classes(data).astype('int')
-        output = self.model.predict(data)   # 预测的是属于每个类别的概率，结果与函数predict_proba相同
-        print(output)
-        max_pro = max(output[0])
-        return label[0] if max_pro > pro_threshold else -1
+        # output = self.model.predict(data)   # 预测的是属于每个类别的概率，结果与函数predict_proba相同
+        # print(output)
+        return label[0]
+        # max_pro = max(output[0])
+        # return label[0] if max_pro > pro_threshold else -1
 
     def sklearn_predict(self, question):
         """
@@ -104,11 +106,31 @@ class Question2Sparql:
         model = joblib.load(model_name)
         label = model.predict(data)
         proba = model.predict_proba(data)
-        print(proba)
+        # print(proba)
         return label[0]
 
-    @staticmethod
-    def rewrite_question(word_objects):
+    def get_slots(self, question):
+        slots = dict()
+        temp = annotation_slot(question)
+        word_objects = self.tw.get_word_objects(question)
+        for word in word_objects:
+            if word.pos == 'ng':
+                slots['genre'] = word.token
+            if word.pos == 'rr':
+                slots['region'] = word.token
+            if word.pos == 'll':
+                slots['language'] = word.token
+        if temp['mv'] is not '':
+            slots['movie'] = temp['mv']
+        if temp['pers'] is not '':
+            slots['pers'] = temp['pers']
+        if temp['num'] is not '':
+            slots['rate'] = temp['num']
+        if temp['year'] is not '':
+            slots['year'] = temp['year']
+        return slots
+
+    def rewrite_question(self, question):
         pass
 
 def fun_call(function_name, word_objects):
@@ -116,11 +138,13 @@ def fun_call(function_name, word_objects):
 
 
 if __name__ == '__main__':
-    ques = [u'范冰冰出演的电影 ']
+    ques = [u'成龙的英文名']
     q2s = Question2Sparql()
     label1 = q2s.sklearn_predict(ques[0])
     label2 = q2s.predict(ques[0])
     print(label1, label2)
+    slots = q2s.get_slots(ques[0])
+    print(slots)
     # for q in ques[:1]:
     #     my_query = q2s.get_sparql(q)
     #     print(my_query)

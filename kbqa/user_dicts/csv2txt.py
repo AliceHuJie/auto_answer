@@ -7,7 +7,6 @@ nz代表电影专名
 nr代表人名。
 """
 
-
 # df = pd.read_csv('./movie_title.csv')
 # title = df['movie_title'].values
 

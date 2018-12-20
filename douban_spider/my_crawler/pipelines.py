@@ -204,4 +204,5 @@ class MysqlPipeline(object):
         return item
 
     def close_spider(self, spider):
+        self.cursor.close()
         self.connect.close()

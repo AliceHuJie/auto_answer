@@ -135,27 +135,28 @@ def generate_all_question_temp():
         a_df['tag'] = tag
         df = df.append(a_df, ignore_index=True)
     df.to_csv('../data/all_question_temp.txt', header=False, sep=' ')
-    print(df)
 
 
-def generate_train_data():
+def generate_train_data(times=1):
     """
         问句构建
         all_question_temp.txt =>  tagged_data.txt
         根据各种问题模板，把模板中的nr 替换成随机的真实人名， nz 替换成真实电影名。
         并根据问题类别打上标签，再存入tagged_data.txt 中
+    :param times: 每个模板生成的问句的数目 
     :return: 
     """
     ques_temp_df = pd.read_table('../data/all_question_temp.txt', header=None, sep=" ", encoding='utf-8')
-    with open('../data/tagged_data.txt', 'a+', encoding='utf8') as f:
+    with open('../data/tagged_data.txt', 'w+', encoding='utf8') as f:
         for index in ques_temp_df.index:   # 逐行遍历数据
             temp = ques_temp_df.iloc[index, 1]
             tag = ques_temp_df.iloc[index, 2]
-            line = fill_question(temp) + ' ' + str(tag) + '\n'
-            f.write(line)
+            for i in range(times):
+                line = __fill_question(temp) + ' ' + str(tag) + '\n'
+                f.write(line)
 
 
-def fill_question(ques_temp):
+def __fill_question(ques_temp):
     """
     传入一个模板，去生成具体的问句，被generate_train_data调用
     :param ques_temp: 一句问题模板
@@ -238,7 +239,7 @@ def text2number(word_objects):
             new_word_objects.append(Word(word.token, word.pos))
 
 
-def gen_annotation_questions():
+def gen_annotation_questions(times=8):
     """
     生成槽位识别的标注好的训练数据
     从all_question_temp提取问题模板，填充问句的同时得到对应的标注,存入annotation_question_data.txt中
@@ -247,19 +248,29 @@ def gen_annotation_questions():
     nr 和 nr 合作的电影有哪些？ => 填充得到：
     芭芭拉 · 迪 里克森 和 袁丁 合演 的 电影 有 哪些?  => 对应的标识得到
     B-PER I-PER I-PER I-PER I-PER。。。
+    @:param times: 每个模板生成的实际问句数
     :return: 
     """
     ques_temp_df = pd.read_table('../data/all_question_temp.txt', header=None, sep=" ", encoding='utf-8')
-    with open('../data/ner_data/annotation_data.txt', 'a+', encoding='utf8') as f:
+    with open('../data/ner_data/annotation_data.txt', 'w+', encoding='utf8') as f:
         for index in ques_temp_df.index:  # 逐行遍历模板问题
             temp = ques_temp_df.iloc[index, 1]
-            letters, labels = fill_and_annotation_question(temp)
-            lines = list(map(lambda x, y: x + ' ' + y + '\n', letters, labels))
-            f.writelines(lines)
-            f.write('\n')
+            for i in range(times):
+                letters, labels = __fill_and_annotation_question(temp)
+                lines = list(map(lambda x, y: x + ' ' + y + '\n', letters, labels))
+                f.writelines(lines)
+                f.write('\n')
+    with open('../data/ner_data/annotation_data_test.txt', 'w+', encoding='utf8') as f:
+        for index in ques_temp_df.index:  # 逐行遍历模板问题
+            temp = ques_temp_df.iloc[index, 1]
+            for i in range(int(times / 4)):
+                letters, labels = __fill_and_annotation_question(temp)
+                lines = list(map(lambda x, y: x + ' ' + y + '\n', letters, labels))
+                f.writelines(lines)
+                f.write('\n')
 
 
-def fill_and_annotation_question(ques_temp):
+def __fill_and_annotation_question(ques_temp):
     """
     根据模板填充得到问题，同时得到对应的标注, 提供给gen_annotation_questions调用
     :param ques_temp: 问题模板
@@ -305,18 +316,11 @@ def fill_and_annotation_question(ques_temp):
     letters = list(map(str, question))  # 每个字的列表
     return letters, labels
 
-
 if __name__ == '__main__':
-    # generate_all_question_temp()
-    # for i in range(10):
-    #     generate_train_data()
-    # for i in range(1, 59):
-    #     generate_train_data()
-    #     print('one time done')
+    generate_train_data(15)
     # get_questions_for_w2vtrain()
-    # for i in range(10):
-    #     gen_annotation_questions()
-    train_data_cut()
+    # gen_annotation_questions(10)
+    # train_data_cut()
     # get_random_score()
     # get_all_chinese_na me()
     # l, la = fill_and_annotation_question('ng类型，ll的电影有多少分数大于x')

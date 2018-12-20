@@ -28,7 +28,7 @@ predict_output_path = '../data/classify_data/predict_output/'
 compare_png_path = '../data/classify_data/compare_pngs/'
 # 要比较的模型
 model_name_list = ['cnn', 'cnn_w2c', 'lstm', 'lstm_w2c', 'mlp', 'lr_1', 'lr_2', 'nb_1', 'nb_2', 'svm_1', 'svm_2']
-
+epochs = 3
 
 def train_cnn_classify():
     """
@@ -54,7 +54,7 @@ def train_cnn_classify():
     model.compile(loss='categorical_crossentropy',
                   optimizer='rmsprop',
                   metrics=['acc'])
-    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=30, batch_size=128)
+    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=epochs, batch_size=128)
     model.save(model_name)
     # print(model.evaluate(x_test, y_test))   # 输出整体的loss 和 accuracy, 形如：[1.579357478227565, 0.5428571428571428]
     y_preds = model.predict_classes(x_test)  # 输出的具体的类别
@@ -96,7 +96,7 @@ def train_cnn_w2v_classify():
     model.compile(loss='categorical_crossentropy',
                   optimizer='rmsprop',
                   metrics=['acc'])
-    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=30, batch_size=128)
+    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=epochs, batch_size=128)
     model.save(model_name)
     # print(model.evaluate(x_test, y_test))
     y_preds = model.predict_classes(x_test)
@@ -130,7 +130,7 @@ def train_lstm_classify():
     model.compile(loss='categorical_crossentropy',
                   optimizer='rmsprop',
                   metrics=['acc'])
-    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=30, batch_size=128)
+    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=epochs, batch_size=128)
     model.save(model_name)
     # print(model.evaluate(x_test, y_test))
     y_preds = model.predict_classes(x_test)
@@ -169,7 +169,7 @@ def train_w2v_lstm_classify():
     model.compile(loss='categorical_crossentropy',
                   optimizer='rmsprop',
                   metrics=['acc'])
-    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=30, batch_size=128)
+    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=epochs, batch_size=128)
     model.save(model_name)
     # print(model.evaluate(x_test, y_test))
     y_preds = model.predict_classes(x_test)
@@ -191,7 +191,7 @@ def train_mlp():
     model.compile(loss='categorical_crossentropy',
                   optimizer='rmsprop',
                   metrics=['acc'])
-    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=30, batch_size=128)
+    model.fit(x_train, y_train, validation_data=(x_val, y_val), epochs=epochs, batch_size=128)
     model.save(model_name)
     # print(model.evaluate(x_test, y_test))
     y_preds = model.predict_classes(x_test)
@@ -240,7 +240,6 @@ def train_nb_2():
     print(metrics.classification_report(onehot_to_category(y_test), y_preds))
 
 
-
 def train_svm_1():
     x_train, y_train, x_val, y_val, x_test, y_test = load_data(1)  # 加载训练测试数据
     svm = SVC(kernel='linear', probability=True)
@@ -263,6 +262,7 @@ def train_svm_2():
     y_scores = svm.predict_proba(x_test)  # 以一个测试为例，看一下决策距离的对应结果是什么
     save_predict_output(y_test, y_preds, y_scores, 'svm_2')
     print(metrics.classification_report(onehot_to_category(y_test), y_preds))
+
 
 def train_lr_1():
     """
@@ -329,9 +329,9 @@ def plot_roc(model_list, fpr, tpr, auc):
         m = model_list[i].split('_model')[0]
         plt.plot(fpr[i], tpr[i], styles[i], lw=2, alpha=0.7, label=u'%s : AUC=%.3f' % (m, auc[i]))
     plt.plot((0, 1), (0, 1), c='#808080', lw=1, ls='--', alpha=0.7)
-    plt.xlim((-0.01, 1.02))
+    plt.xlim((-0.01, 0.5))
     plt.ylim((-0.01, 1.02))
-    plt.xticks(np.arange(0, 1.1, 0.1))
+    plt.xticks(np.arange(0, 0.5, 0.1))
     plt.yticks(np.arange(0, 1.1, 0.1))
     plt.xlabel('False Positive Rate', fontsize=13)
     plt.ylabel('True Positive Rate', fontsize=13)
@@ -341,6 +341,7 @@ def plot_roc(model_list, fpr, tpr, auc):
     # plt.show()
     plt.savefig(compare_png_path + 'roc.png')
     print('ROC - Curve saved ... ')
+
 
 def plot_pr(model_list, recall, precision, average_precision):
     """
@@ -426,8 +427,8 @@ def compare_model(model_list):
         fpr[i], tpr[i], thresholds = metrics.roc_curve(y_true.ravel(), y_scores.reshape(-1, 1).ravel())
         # y_true 是one_hot, y_scores, micro 方式计算fpr, tpr, threshold
         auc[i] = metrics.auc(fpr[i], tpr[i])   # 手动计算auc
-        # auc2 = metrics.roc_auc_score(y_true, y_preds, average='micro')  # 直接由预测结果和真实结果调用函数计算auc
-
+        # auc_temp = metrics.roc_auc_score(y_true, y_scores, average='micro')  # 直接由预测结果和真实结果调用函数计算auc
+        # print('函数计算auc:' + str(auc_temp))  # 结果等于手动
         precision[i], recall[i], thresholds = metrics.precision_recall_curve(y_true.ravel(), y_scores.ravel())
         average_precision[i] = metrics.average_precision_score(y_true, y_scores, average="micro")
 
@@ -459,10 +460,10 @@ if __name__ == '__main__':
     # train_mlp()
     # train_nb_1()
     # train_nb_2()
-    # train_svm_1()
+    train_svm_1()
     # train_svm_2()
     # train_lr_1()
     # train_lr_2()
-    compare_model(model_name_list[5:])
+    # compare_model(model_name_list)
     # print(model_name_list[5:])
-    # compare_report(model_name_list[5:])
+    # compare_report(model_name_list)

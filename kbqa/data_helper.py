@@ -16,8 +16,8 @@ from sklearn.externals import joblib
 from kbqa.word_tagging import Tagger
 
 MAX_SEQUENCE_LENGTH = 20  # 句子的最大长度，句子转ids时，长度不足的补0
-VALIDATION_SPLIT = 0.33  # 验证集的比例   训练集占0.8
-TEST_SPLIT = 0.33  # 测试集的比例
+VALIDATION_SPLIT = 0  # 验证集的比例   训练集占0.8
+TEST_SPLIT = 0.2  # 测试集的比例
 cur_path = os.path.dirname(os.path.abspath(__file__))
 TOKENIZER_SAVE_PATH = os.path.abspath(os.path.join(cur_path, '..\\data\\classify_data\\tokenizer.pickle'))    # 方式0使用
 TOKENIZER_SAVE_PATH1 = os.path.abspath(os.path.join(cur_path, '..\\data\\classify_data\\tokenizer1.pickle'))    # 方式1使用
@@ -105,10 +105,10 @@ def load_data(method=0):
         data, labels = joblib.load(file)
 
     # *************************** 随机打乱data, labels ###########################################
-    # n_samples = len(data)
-    # sidx = np.random.permutation(n_samples)
-    # data = np.array([data[s] for s in sidx])
-    # labels = np.array([labels[s] for s in sidx])
+    n_samples = len(data)
+    sidx = np.random.permutation(n_samples)
+    data = np.array([data[s] for s in sidx])
+    labels = np.array([labels[s] for s in sidx])
     # **************************** 训练集，验证集，测试集按指定比例划分 **************************
     p1 = int(len(data) * (1 - VALIDATION_SPLIT - TEST_SPLIT))
     p2 = int(len(data) * (1 - TEST_SPLIT))
@@ -164,6 +164,6 @@ if __name__ == '__main__':
     # print(len(x1))
     # print(onehot_to_category(y1[:10]))
     # print(y1[0])
-    # gen_data()
-    gen_data(1)
-    gen_data(2)
+    gen_data()
+    # gen_data(1)
+    # gen_data(2)

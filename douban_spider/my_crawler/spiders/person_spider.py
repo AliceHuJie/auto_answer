@@ -100,3 +100,8 @@ class PersonSpider(Spider):
             logging.error('some error happened with crawl person : %s' % id)
             logging.error(traceback.print_exc(e))
             traceback.print_exc(e)
+
+    def __del__(self):
+        self.cursor.close()  # 关闭游标
+        self.connect.close()  # 关闭数据库
+        print('Mysql Connect Closed ...')

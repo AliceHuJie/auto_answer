@@ -9,13 +9,13 @@ def generate_model():
     # 加载分此后的文本，使用的是Ttext2Corpus类
     sentences = word2vec.Text8Corpus('../data/w2vdata/word_cut_data.txt')
     # 训练模型，部分参数如下
-    model = word2vec.Word2Vec(sentences, size=100, hs=1, min_count=1, window=3)
+    model = word2vec.Word2Vec(sentences, size=100, hs=1, min_count=5, window=5)
     model.save('../data/w2v_model/movie_field.model')
 
 
 def test_model():
     model = word2vec.Word2Vec.load('../data/w2v_model/movie_field.model')
-    s = model.most_similar('出演')
+    s = model.most_similar('同性')
     # print(model.wv.vocab)
     print(s)
     # vec = model['生日']
