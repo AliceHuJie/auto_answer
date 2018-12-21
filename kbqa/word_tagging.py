@@ -52,7 +52,6 @@ class Tagger:
         words = [Word(word, tag) for word, tag in pseg.cut(sentence)]
         print('  '.join(list(map(lambda x, y: x + '/' + y, [w.token for w in words],
                                 [w.pos for w in words]))))
-        # words2 = Tagger.text2digit_number(words)  # TODO 这里只加了数字转换
         return words
 
     @staticmethod
@@ -65,42 +64,6 @@ class Tagger:
         """
         return [word for word, tag in pseg.cut(sentence)]
 
-    @staticmethod
-    def text2digit_number(word_objects):
-        """
-        分词后的句子进行数字分数替换 ，比如八点五，转成8.5
-        :return: 
-        """
-        m = {u'点': '.', u'零': 0, u'一': 1, u'二': 2, u'三': 3, u'四': 4, u'五': 5, u'六': 6, u'七': 7, u'八': 8, u'九': 9, u'十': 10}
-        new_word_objects = []
-        number = ''
-        for word in word_objects:
-            if word.pos == 'ss':
-                if Tagger.is_number(word.token):
-                    return word_objects
-                else:
-                    s = word.token.strip(u'分')
-                    for c in s:
-                        if c.isdigit():
-                            number += c
-                        else:
-                            number += str(m.get(c))
-                    word.token = number
-            new_word_objects.append(Word(word.token, word.pos))
-        return new_word_objects
-
-    @staticmethod
-    def is_number(s):
-        try:
-            float(s)
-            return True
-        except ValueError:
-            return False
-
-    @staticmethod
-    def alias2name(word_objects):
-        """切词后替换问句中演员(包括外文名)，电影的别名为正名"""
-        pass
 
 
 

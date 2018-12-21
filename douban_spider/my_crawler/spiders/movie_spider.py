@@ -31,7 +31,7 @@ class MovieSpider(Spider):
     def start_requests(self):
         print('Movie Spider Start ...')
         logging.info('Movie Spider Start ...')
-        for country in country_list[1:]:  # 国家在前，先爬完一个国家所有年份的电影
+        for country in country_list[2:5]:  # 国家在前，先爬完一个国家所有年份的电影
             c = parse.quote(country)
             for year in year_list[0:5]:  # len(year_list)
                 for page in range(0, 500):
@@ -75,7 +75,7 @@ class MovieSpider(Spider):
             # 电影名字
             title = selector.xpath('//span[@property="v:itemreviewed"]/text()').extract()[0]
             alias_extra = ''
-            if len(title.split(' ')) > 0:
+            if containsZh(title) and len(title.split(' ')) > 0:  # 标题含中文，才以空格作为名称和别名的分界。否则纯英文名不做分界
                 alias_extra = ' '.join(title.split(' ')[1:])
                 title = title.split(' ')[0]
             # 年份
@@ -118,6 +118,7 @@ class MovieSpider(Spider):
             alias = ''.join(alias).strip().replace("\"", '“')
             if alias_extra is not '':
                 alias = alias_extra + '/' + alias
+                alias = alias.strip('/')
             # 评分
             rate = selector.xpath('//strong[@property="v:average"]/text()').extract()
             # 评价人数
@@ -169,3 +170,16 @@ def extract_ids_from_hrefs(hrefs):
         if len(id_match) > 0:
             ids.append(id_match[0])
     return ids
+
+
+def containsZh(str):
+    """
+    判断字符串中是否包含中文
+    :param str: 
+    :return: 
+    """
+    zhPattern = re.compile(u'[\u4e00-\u9fa5]+')
+    match = zhPattern.search(str)
+    if match:
+        return True
+    return False

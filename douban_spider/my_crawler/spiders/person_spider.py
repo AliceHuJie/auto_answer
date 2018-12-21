@@ -68,10 +68,12 @@ class PersonSpider(Spider):
             more_cn = ''.join(more_cn)
             if more_cn is not '':
                 more_cn = re.sub(u'\\(.*?\\)', '', more_cn)  # 去掉括号及中间内容
+                more_cn = re.sub(u'（.*?）', '', more_cn)
             more_fn = re.findall('更多外文名</span>:(.*?)</li>', basic_info)  # [Kong-sang Chan (本名) / Pao Pao (昵称)]
             more_fn = ''.join(more_fn).replace('\'', '')
             if more_fn is not '':
                 more_fn = re.sub(u'\\(.*?\\)', '', more_fn)
+                more_fn = re.sub(u'（.*?）', '', more_fn)
                 more_fn = more_fn.replace('"', '').replace('\'', '')  # 去掉特殊字符，避免导致插入语句错误
             introduction = selector.xpath('//*[@id="intro"]/div[2]/span[last()]/text()').extract_first()  # 从span标签提取
             if introduction is None:

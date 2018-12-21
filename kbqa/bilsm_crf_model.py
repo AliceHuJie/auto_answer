@@ -113,5 +113,5 @@ def annotation_slot(predict_text):
 
 if __name__ == '__main__':
     # train()
-    r = annotation_slot('cry woman评分怎么样')
+    r = annotation_slot('成龙演过的评分大于九十分的电影有什么')
     print(r)

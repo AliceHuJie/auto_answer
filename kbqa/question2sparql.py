@@ -138,12 +138,13 @@ def fun_call(function_name, word_objects):
 
 
 if __name__ == '__main__':
-    ques = [u'成龙的英文名']
+    # ques = [u'成龙的英文名']
     q2s = Question2Sparql()
-    label1 = q2s.sklearn_predict(ques[0])
-    label2 = q2s.predict(ques[0])
-    print(label1, label2)
-    slots = q2s.get_slots(ques[0])
+    # label1 = q2s.sklearn_predict(ques[0])
+    # label2 = q2s.predict(ques[0])
+    # print(label1, label2)
+    question = '石岚和邝毅怡一起演过什么评分高于八点五分的喜剧类型的电影'
+    slots = q2s.get_slots(question)
     print(slots)
     # for q in ques[:1]:
     #     my_query = q2s.get_sparql(q)
