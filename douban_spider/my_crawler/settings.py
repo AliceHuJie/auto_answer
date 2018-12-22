@@ -50,6 +50,14 @@ DEFAULT_REQUEST_HEADERS = {
     'X-Requested-With': 'XMLHttpRequest',
 }
 
+BAIKE_REQUEST_HEADERS = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
+    'Accept-Encoding': 'gzip, deflate, br',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.82',
+    'Connection': 'keep-alive',
+    'Host': 'baike.baidu.com',
+    'X-Requested-With': 'XMLHttpRequest',
+}
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 SPIDER_MIDDLEWARES = {

@@ -10,18 +10,25 @@ import traceback
 import pymysql
 from sklearn.externals import joblib
 
-MOVIE_SYNONYM_FILE = './movie_synonym.txt'
-PERSON_SYNONYM_FILE = './person_synonym.txt'
-GENRE_SYNONYM_FILE = './genre_synonym.txt'
-LANGUAGE_SYNONYM_FILE = './language_synonym.txt'
-REGION_SYNONYM_FILE = './region_synonym.txt'
-YEAR_SYNONYM_FILE = './year_synonym.txt'
-SYNONYM_DICT = './synonym.pkl'  # 持久化保存同义词典的map
+data_path = 'data/synonym_data/'
+# 同义词映射文件
+MOVIE_SYNONYM_FILE = data_path + 'movie_synonym.txt'
+PERSON_SYNONYM_FILE = data_path + 'person_synonym.txt'
+GENRE_SYNONYM_FILE = data_path + 'genre_synonym.txt'
+LANGUAGE_SYNONYM_FILE = data_path + 'language_synonym.txt'
+REGION_SYNONYM_FILE = data_path + 'region_synonym.txt'
+YEAR_SYNONYM_FILE = data_path + 'year_synonym.txt'
+# 持久化保存同义词典的map
+SYNONYM_DICT = data_path + 'synonym.pkl'
+# 数据库提取的字段，用于后续训练词向量,需要绝对路径，不然文件会在mysql的目录下
+movie_description_file = 'F:/bsworkspace/server/auto_answer_for_movie/data/w2vdata/movie_description.txt'
+person_introduction_file = 'F:/bsworkspace/server/auto_answer_for_movie/data/w2vdata/person_introduction.txt'
 
 
 class DBDataHelper:
     """
     清理数据库数据，利用数据库数据生成同义词典，生成电影名，人名等文件用于填充问句
+    需要连接数据库的操作就定义为实例方法，其他的为类方法
     """
 
     def __init__(self):
@@ -89,6 +96,18 @@ class DBDataHelper:
                     self.connect.commit()
         except Exception as e:
             traceback.print_exc(e)
+
+    def get_description_for_w2v_train(self):
+        """
+        从movie表和person表读取含中文的人物介绍，电影介绍。写入文件中，后续用于训练词向量
+        输出到 ../data/w2vdata/person_introduction.txt 和  ../data/w2vdata/person_description.txt 
+        :return: 
+        """
+        sql = 'SELECT {field} FROM {table} where length({field})!=char_length({field}) into outfile "{file}"'
+        movie_sql = sql.format(field='description', table='movie', file=movie_description_file)
+        self.cursor.execute(movie_sql)
+        person_sql = sql.format(field='introduction', table='person', file=person_introduction_file)
+        self.cursor.execute(person_sql)
 
     @staticmethod
     def gen_year_map_file():
@@ -209,13 +228,13 @@ def re_build_synonym_dict():
     SynonymUtils.generate_syn_dict()  # 根据别名映射文件生成新的dict
 
 
-qq = '石岚和邝毅怡一起演过什么评分高于八点五分的搞笑类型的四川话的电影'
-slots = {'genre': '搞笑', 'pers': ['石岚', '邝毅怡'], 'rate': '八点五', 'language': '四川话'}
-q, s = SynonymUtils().rewrite_question(qq, slots)
-print(qq)
-print(q)
-print(s)
+# qq = '石岚和邝毅怡一起演过什么评分高于八点五分的搞笑类型的四川话的电影'
+# slots = {'genre': '搞笑', 'pers': ['石岚', '邝毅怡'], 'rate': '八点五', 'language': '四川话'}
+# q, s = SynonymUtils().rewrite_question(qq, slots)
+# print(qq)
+# print(q)
+# print(s)
 
-
+DBDataHelper().get_description_for_w2v_train()
 # SynonymUtils.generate_syn_dict()
 # print(SynonymUtils().synonym_dict['language'])

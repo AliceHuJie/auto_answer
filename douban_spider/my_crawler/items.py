@@ -44,3 +44,9 @@ class PersonItem(Item):
     occupation = Field()
     more_cn_name = Field()
     more_fn_name = Field()
+
+
+class TextItem(Item):
+    id = Field()
+    key = Field()
+    description = Field()

@@ -31,7 +31,7 @@ class MovieSpider(Spider):
     def start_requests(self):
         print('Movie Spider Start ...')
         logging.info('Movie Spider Start ...')
-        for country in country_list[2:5]:  # 国家在前，先爬完一个国家所有年份的电影
+        for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
             c = parse.quote(country)
             for year in year_list[0:5]:  # len(year_list)
                 for page in range(0, 500):
