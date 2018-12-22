@@ -5,9 +5,7 @@
 
 import re
 from urllib import parse
-
 from scrapy import Request, Selector, Spider
-
 from douban_spider.my_crawler.items import TextItem
 from douban_spider.my_crawler.settings import BAIKE_REQUEST_HEADERS
 
