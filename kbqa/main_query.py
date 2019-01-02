@@ -2,26 +2,28 @@
 # @Time    : 2018/10/31 20:35
 # @Author  : hujie
 # @Info  : 作为web后台提供的唯一查询接口
+import hashlib
+import logging
+import os
 import random
+import time
+import xml.etree.cElementTree as ET
+
+from django.conf import settings
+from django.http.response import HttpResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 
 from kbqa.jena_sparql_endpoint import JenaFuseki
 from kbqa.question2sparql import Question2Sparql
-import logging
-from django.shortcuts import render
-from django.http.response import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-import xml.etree.cElementTree as ET
-import hashlib
-import time
-import os
-
-from kbqa.wx_msg import TextMsg, ImageMsg
+from kbqa.wx_msg import TextMsg
 
 logger = logging.getLogger('django')
 ques_logger = logging.getLogger('ques_logger')
 fuseki = JenaFuseki()  # 预加载jeneFuseki连接对象
+print('Fuseki server service start success ...')
 q2s = Question2Sparql()  # 运行该文件的时候就加载好q2s对象，避免重复创建该对象导致的模型加载等的耗时
+print('q2s service start success ...')
 # 加载模型后先使用测试数据预测一下，不然等到接收的问句去预测时会报错
 my_query = q2s.get_sparql(u'电影功夫之王有哪些演员？')
 print('服务启动成功......')
@@ -38,7 +40,7 @@ def query(question):
     :return: 答案
     """
     # TO DO 问题写入文件记录
-    sparql, label, func = q2s.get_sparql(question)
+    sparql, label, func, new_question, slots = q2s.get_sparql(question)
     if label == -1:
         answer = '抱歉，暂不能回答您的这个问题'
     elif sparql is None:
@@ -50,7 +52,11 @@ def query(question):
             answer = u'抱歉，暂时查不到该问题答案'
         else:
             answer = ','.join(answer)
-    ques_logger.info(msg='{question} {label} {func} [{answer}]'.format(question=question, label=label, func=func, answer=answer[:20]+'...'))  # TODO 记录实体识别效果
+    ques_logger.info(
+        msg='{question} {label} {func} {new_question} {slots} [{answer}]'.format(question=question, label=label,
+                                                                                 func=func, new_question=new_question,
+                                                                                 slots=slots, answer=answer[
+                                                                                                     :20] + '...'))  # TODO 记录实体识别效果
     return answer
 
 

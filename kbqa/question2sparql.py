@@ -10,8 +10,9 @@ from keras.preprocessing.sequence import pad_sequences
 from sklearn.externals import joblib
 
 from kbqa import word_tagging
-from kbqa.bilsm_crf_model import annotation_slot
+from kbqa.bilsm_crf_model import BilstmCrfModel
 from kbqa.data_helper import load_tokenizer, MAX_SEQUENCE_LENGTH
+from kbqa.gen_synoym import SynonymUtils
 
 # 类别与生成该类别问题的函数对应
 LABEL_TEMP_MAP = {
@@ -22,7 +23,6 @@ LABEL_TEMP_MAP = {
     4: 'movie_duration_question',  # 电影时长
     5: 'movie_alias_question',  # 电影别名
     6: 'movie_cover_question',  # 电影封面图
-
     7: 'actor_intro_question',  # 演员简介
     8: 'actor_birthday_question',  # 演员生日
     9: 'actor_birthplace_question',  # 演员出生地
@@ -30,16 +30,20 @@ LABEL_TEMP_MAP = {
     11: 'actor_gender_question',  # 演员性别
     12: 'actor_pic_question',  # 演员的头像
     13: 'actor_englishname_question',  # 演员英文名
-
     14: 'movie_show_country_question',  # 电影在哪些国家上映了
     15: 'movie_has_director_question',  # 电影有哪些导演
     16: 'has_actor_question',  # 某电影有哪些演员
     17: 'types_of_movie_question',  # 演员演过的电影类型
-
     18: 'has_movie_question',  # 不含评分条件 指定条件下有哪些电影
     19: 'has_movie_gt_question',  # 评分高于多少分的电影 指定条件下有哪些电影
     20: 'has_movie_lt_question',  # 评分低于多少分的电影 指定条件下有哪些电影
     21: 'cooperate_actors_question',  # 某演员合作过的有哪些演员
+    22: 'movie_has_scenarists_question',  # 电影有哪些编剧
+    23: 'movie_has_language_question',  # 电影有哪些语言
+    24: 'person_alias_question',  # 演员别名
+    25: 'movie_count_question',  # 符合条件的电影数目
+    26: 'movie_count_gt_question',  # 电影数目（带大于条件）
+    27: 'movie_count_lt_question',  # 电影数目（带小于条件）
 }
 
 cur_path = os.path.dirname(os.path.abspath(__file__))
@@ -53,10 +57,14 @@ class Question2Sparql:
     def __init__(self):
         print('initialize word_tagging...')
         self.tw = word_tagging.Tagger()
-        print('load model...')
+        print('load classify model...')
         self.model = load_model(model_file)
         print('load tokenizer...')
         self.tokenizer = load_tokenizer()[0]
+        print('load ner model...')
+        self.ner_service = BilstmCrfModel()
+        print('init done ...')
+
 
     def get_sparql(self, question):
         """
@@ -67,14 +75,15 @@ class Question2Sparql:
         :return: 本来只需要返回sparlQL, 但是为了记录quesion即分类label， 实体识别效果等日志。添加了多余返回信息
         """
         # todo 问句的改写
-        word_objects = self.tw.get_word_objects(question)
         words_list = self.tw.get_cut_words(question)
         label = self.predict(words_list)
-        if label is not -1:
-            func = 'QuestionSet.' + LABEL_TEMP_MAP[label]
-            sparql = fun_call(function_name=func, word_objects=word_objects)
-            return sparql, label, func  # TODO 待添加实体识别的结果
-        return None, -1, None
+        if label == -1:
+            return label
+        func = 'QuestionSet.' + LABEL_TEMP_MAP[label]
+        slots = self.get_slots(question)
+        new_question, new_slots = SynonymUtils().rewrite_question(question, slots)
+        sparql = fun_call(function_name=func, slots=new_slots)
+        return sparql, label, func, new_question, new_slots
 
     def predict(self, question_cut):
         """
@@ -110,8 +119,13 @@ class Question2Sparql:
         return label[0]
 
     def get_slots(self, question):
+        """
+        综合字典和ner得到的槽位
+        :param question: 
+        :return: 
+        """
         slots = dict()
-        temp = annotation_slot(question)
+        temp = self.ner_service.annotation_slot(question)
         word_objects = self.tw.get_word_objects(question)
         for word in word_objects:
             if word.pos == 'ng':
@@ -130,22 +144,11 @@ class Question2Sparql:
             slots['year'] = temp['year']
         return slots
 
-    def rewrite_question(self, question):
-        pass
 
-def fun_call(function_name, word_objects):
-    return eval(function_name)(word_objects)  # 根据函数名动态调用
+def fun_call(function_name, slots):
+    return eval(function_name)(slots)  # 根据函数名动态调用
 
 
-if __name__ == '__main__':
-    # ques = [u'成龙的英文名']
-    q2s = Question2Sparql()
-    # label1 = q2s.sklearn_predict(ques[0])
-    # label2 = q2s.predict(ques[0])
-    # print(label1, label2)
-    question = '石岚和邝毅怡一起演过什么评分高于八点五分的喜剧类型的电影'
-    slots = q2s.get_slots(question)
-    print(slots)
-    # for q in ques[:1]:
-    #     my_query = q2s.get_sparql(q)
-    #     print(my_query)
+question = '陈港生一七年演过的评分大于八点七的电影有哪些？'
+s = Question2Sparql().get_sparql(question)
+print(s)

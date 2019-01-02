@@ -10,150 +10,20 @@
 
 map:database a d2rq:Database;
 	d2rq:jdbcDriver "com.mysql.jdbc.Driver";
-	d2rq:jdbcDSN "jdbc:mysql:///anto_answer_for_movie";
+	d2rq:jdbcDSN "jdbc:mysql:///auto_answer_for_movie";
 	d2rq:username "root";
 	d2rq:password "2736";
 	jdbc:autoReconnect "true";
 	jdbc:zeroDateTimeBehavior "convertToNull";
 	.
 
-# Table actor
-map:actor a d2rq:ClassMap;
-	d2rq:dataStorage map:database;
-	d2rq:uriPattern "actor/@@actor.person_id@@";
-	d2rq:class :Actor;
-	d2rq:classDefinitionLabel "actor";
-	.
-
-map:actor_person_name a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
-	d2rq:property :personName;
-	d2rq:propertyDefinitionLabel "actor person_name";
-	d2rq:column "actor.person_name";
-	.
-map:actor_person_english_name a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
-	d2rq:property :personEnglishName;
-	d2rq:propertyDefinitionLabel "actor person_english_name";
-	d2rq:column "actor.person_english_name";
-	.
-map:actor_person_gender a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
-	d2rq:property :personGender;
-	d2rq:propertyDefinitionLabel "actor person_gender";
-	d2rq:column "actor.person_gender";
-	.
-map:actor_person_pic a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
-	d2rq:property :personPic;
-	d2rq:propertyDefinitionLabel "actor person_pic";
-	d2rq:column "actor.person_pic";
-	.
-map:actor_person_birth_day a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
-	d2rq:property :personBirthDay;
-	d2rq:propertyDefinitionLabel "actor person_birth_day";
-	d2rq:column "actor.person_birth_day";
-	.
-map:actor_person_birth_place a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
-	d2rq:property :personBirthPlace;
-	d2rq:propertyDefinitionLabel "actor person_birth_place";
-	d2rq:column "actor.person_birth_place";
-	.
-map:actor_person_biography a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
-	d2rq:property :personBiography;
-	d2rq:propertyDefinitionLabel "actor person_biography";
-	d2rq:column "actor.person_biography";
-	.
-map:actor_person_introduction a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
-	d2rq:property :personIntroduction;
-	d2rq:propertyDefinitionLabel "actor person_introduction";
-	d2rq:column "actor.person_introduction";
-	.
-
-# Table country
-map:country a d2rq:ClassMap;
-	d2rq:dataStorage map:database;
-	d2rq:uriPattern "country/@@country.country_id@@";
-	d2rq:class :Country;
-	d2rq:classDefinitionLabel "country";
-	.
-
-map:country_country_name a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:country;
-	d2rq:property :countryName;
-	d2rq:propertyDefinitionLabel "country country_name";
-	d2rq:column "country.country_name";
-	.
-
-# Table director
-map:director a d2rq:ClassMap;
-	d2rq:dataStorage map:database;
-	d2rq:uriPattern "director/@@director.person_id@@";
-	d2rq:class :Director;
-	d2rq:classDefinitionLabel "director";
-	.
-
-map:director_person_name a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:director;
-	d2rq:property :personName;
-	d2rq:propertyDefinitionLabel "director person_name";
-	d2rq:column "director.person_name";
-	.
-map:director_person_english_name a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:director;
-	d2rq:property :personEnglishName;
-	d2rq:propertyDefinitionLabel "director person_english_name";
-	d2rq:column "director.person_english_name";
-	.
-map:director_person_gender a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:director;
-	d2rq:property :personGender;
-	d2rq:propertyDefinitionLabel "director person_gender";
-	d2rq:column "director.person_gender";
-	.
-map:director_person_pic a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:director;
-	d2rq:property :personPic;
-	d2rq:propertyDefinitionLabel "director person_pic";
-	d2rq:column "director.person_pic";
-	.
-map:director_person_birth_day a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:director;
-	d2rq:property :personBirthDay;
-	d2rq:propertyDefinitionLabel "director person_birth_day";
-	d2rq:column "director.person_birth_day";
-	.
-map:director_person_birth_place a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:director;
-	d2rq:property :personBirthPlace;
-	d2rq:propertyDefinitionLabel "director person_birth_place";
-	d2rq:column "director.person_birth_place";
-	.
-map:director_person_biography a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:director;
-	d2rq:property :personBiography;
-	d2rq:propertyDefinitionLabel "director person_biography";
-	d2rq:column "director.person_biography";
-	.
-map:director_person_introduction a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:director;
-	d2rq:property :personIntroduction;
-	d2rq:propertyDefinitionLabel "director person_introduction";
-	d2rq:column "director.person_introduction";
-	.
-
 # Table genre
 map:genre a d2rq:ClassMap;
 	d2rq:dataStorage map:database;
 	d2rq:uriPattern "genre/@@genre.genre_id@@";
-	d2rq:class :Genre;
+	d2rq:class vocab:Genre;
 	d2rq:classDefinitionLabel "genre";
 	.
-
 map:genre_genre_name a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:genre;
 	d2rq:property :genreName;
@@ -161,95 +31,267 @@ map:genre_genre_name a d2rq:PropertyBridge;
 	d2rq:column "genre.genre_name";
 	.
 
+# Table language
+map:language a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "language/@@language.language_id@@";
+	d2rq:class vocab:Language;
+	d2rq:classDefinitionLabel "language";
+	.
+map:language_language_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:language;
+	d2rq:property :languageName;
+	d2rq:propertyDefinitionLabel "language language_name";
+	d2rq:column "language.language_name";
+	.
+
 # Table movie
 map:movie a d2rq:ClassMap;
 	d2rq:dataStorage map:database;
 	d2rq:uriPattern "movie/@@movie.movie_id@@";
-	d2rq:class :Movie;
+	d2rq:class vocab:Movie;
 	d2rq:classDefinitionLabel "movie";
 	.
-
-map:movie_movie_title a d2rq:PropertyBridge;
+map:movie_title a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
 	d2rq:property :movieTitle;
-	d2rq:propertyDefinitionLabel "movie movie_title";
-	d2rq:column "movie.movie_title";
+	d2rq:propertyDefinitionLabel "movie title";
+	d2rq:column "movie.title";
 	.
-map:movie_movie_introduction a d2rq:PropertyBridge;
+map:movie_myear a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
-	d2rq:property :movieIntroduction;
-	d2rq:propertyDefinitionLabel "movie movie_introduction";
-	d2rq:column "movie.movie_introduction";
+	d2rq:property :movieYear;
+	d2rq:propertyDefinitionLabel "movie myear";
+	d2rq:column "movie.myear";
+	d2rq:datatype xsd:integer;
 	.
-map:movie_movie_rating a d2rq:PropertyBridge;
+map:movie_description a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
-	d2rq:property :movieRating;
-	d2rq:propertyDefinitionLabel "movie movie_rating";
-	d2rq:column "movie.movie_rating";
+	d2rq:property :movieDescription;
+	d2rq:propertyDefinitionLabel "movie description";
+	d2rq:column "movie.description";
+	.
+map:movie_rate a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:movie;
+	d2rq:property :movieRate;
+	d2rq:propertyDefinitionLabel "movie rate";
+	d2rq:column "movie.rate";
 	d2rq:datatype xsd:double;
 	.
-map:movie_movie_release_date a d2rq:PropertyBridge;
+map:movie_sdate a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
 	d2rq:property :movieReleaseDate;
-	d2rq:propertyDefinitionLabel "movie movie_release_date";
-	d2rq:column "movie.movie_release_date";
+	d2rq:propertyDefinitionLabel "movie sdate";
+	d2rq:column "movie.sdate";
 	.
-map:movie_movie_duration a d2rq:PropertyBridge;
+map:movie_runtime a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
-	d2rq:property :movieDuration;
-	d2rq:propertyDefinitionLabel "movie movie_duration";
-	d2rq:column "movie.movie_duration";
+	d2rq:property :movieRuntime;
+	d2rq:propertyDefinitionLabel "movie runtime";
+	d2rq:column "movie.runtime";
 	.
-map:movie_movie_alias a d2rq:PropertyBridge;
+map:movie_alias a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
 	d2rq:property :movieAlias;
-	d2rq:propertyDefinitionLabel "movie movie_alias";
-	d2rq:column "movie.movie_alias";
+	d2rq:propertyDefinitionLabel "movie alias";
+	d2rq:column "movie.alias";
 	.
-map:movie_movie_cover a d2rq:PropertyBridge;
+map:movie_language a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
-	d2rq:property :movieCover;
-	d2rq:propertyDefinitionLabel "movie movie_cover";
-	d2rq:column "movie.movie_cover";
+	d2rq:property :movieLanguage;
+	d2rq:propertyDefinitionLabel "movie language";
+	d2rq:column "movie.language";
+	.
+map:movie_region a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:movie;
+	d2rq:property :movieRegion;
+	d2rq:propertyDefinitionLabel "movie region";
+	d2rq:column "movie.region";
+	.
+map:movie_scenarists a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:movie;
+	d2rq:property :movieScenarists;
+	d2rq:propertyDefinitionLabel "movie scenarists";
+	d2rq:column "movie.scenarists";
+	.
+map:movie_directors a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:movie;
+	d2rq:property :movieDirectors;
+	d2rq:propertyDefinitionLabel "movie directors";
+	d2rq:column "movie.directors";
+	.
+map:movie_actors a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:movie;
+	d2rq:property :movieActors;
+	d2rq:propertyDefinitionLabel "movie actors";
+	d2rq:column "movie.actors";
+	.
+map:movie_rating_num a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:movie;
+	d2rq:property :movieRatingNum;
+	d2rq:propertyDefinitionLabel "movie rating_num";
+	d2rq:column "movie.rating_num";
+	d2rq:datatype xsd:integer;
+	.
+map:movie_genre a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:movie;
+	d2rq:property :movieGenre;
+	d2rq:propertyDefinitionLabel "movie genre";
+	d2rq:column "movie.genre";
 	.
 
-# Table movie_to_actor (n:m)
+# Table movie_to_actor
 map:movie_to_actor__link a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:actor;
+	d2rq:belongsToClassMap map:person;
         d2rq:property :hasActedIn;
         d2rq:refersToClassMap map:movie;
+	d2rq:join "movie_to_actor.actor_id => person.person_id";
 	d2rq:join "movie_to_actor.movie_id => movie.movie_id";
-	d2rq:join "movie_to_actor.actor_id => actor.person_id";
-        .
+	.
 
-
-# Table movie_to_country (n:m)
-map:movie_to_country__link a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:movie;
-    d2rq:property :showInCountry;
-    d2rq:refersToClassMap map:country;
-	d2rq:join "movie_to_country.country_id => country.country_id";
-	d2rq:join "movie_to_country.movie_id => movie.movie_id";
-    .
-
-
-# Table movie_to_director (n:m)
+# Table movie_to_director
 map:movie_to_director__link a d2rq:PropertyBridge;
-	d2rq:belongsToClassMap map:movie;
-    d2rq:property :hasDirector;
-    d2rq:refersToClassMap map:director;
-	d2rq:join "movie_to_director.director_id => director.person_id";
+        d2rq:belongsToClassMap map:movie;
+        d2rq:property :hasDirector;
+        d2rq:refersToClassMap map:person;
+	d2rq:join "movie_to_director.director_id => person.person_id";
 	d2rq:join "movie_to_director.movie_id => movie.movie_id";
+	.
 
-
-
-# Table movie_to_genre (n:m)
+# Table movie_to_genre
 map:movie_to_genre__link a d2rq:PropertyBridge;
 	d2rq:belongsToClassMap map:movie;
 	d2rq:property :hasGenre;
 	d2rq:refersToClassMap map:genre;
 	d2rq:join "movie_to_genre.movie_id => movie.movie_id";
-	d2rq:join "movie_to_genre.genre_id => genre.genre_id";
+	d2rq:join "movie_to_genre.genre_name => genre.genre_name";
     	.
 
+# Table movie_to_language
+map:movie_to_language__link a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:movie;
+	d2rq:property :hasLanguage;
+	d2rq:refersToClassMap map:language;
+	d2rq:join "movie_to_language.movie_id => movie.movie_id";
+	d2rq:join "movie_to_language.language_name => language.language_name";
+    	.
+
+# Table movie_to_region
+map:movie_to_region__link a d2rq:PropertyBridge;
+    d2rq:belongsToClassMap map:movie;
+    d2rq:property :showInRegion;
+    d2rq:refersToClassMap map:region;
+    d2rq:join "movie_to_region.region_name => region.region_name";
+    d2rq:join "movie_to_region.movie_id => movie.movie_id";
+    .
+
+# Table movie_to_scenarist
+map:movie_to_scenarist__link a d2rq:PropertyBridge;
+        d2rq:belongsToClassMap map:movie;
+        d2rq:property :hasWriter;
+        d2rq:refersToClassMap map:person;
+	d2rq:join "movie_to_scenarist.scenarist_id => person.person_id";
+	d2rq:join "movie_to_scenarist.movie_id => movie.movie_id";
+	.
+
+# Table person
+map:person a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "person/@@person.person_id@@";
+	d2rq:class vocab:person;
+	d2rq:classDefinitionLabel "person";
+	.
+map:person__label a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property rdfs:label;
+	d2rq:pattern "person #@@person.person_id@@";
+	.
+map:person_person_id a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :person_person_id;
+	d2rq:propertyDefinitionLabel "person person_id";
+	d2rq:column "person.person_id";
+	d2rq:datatype xsd:integer;
+	.
+map:person_image a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personImage;
+	d2rq:propertyDefinitionLabel "person image";
+	d2rq:column "person.image";
+	.
+map:person_cn_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personName;
+	d2rq:propertyDefinitionLabel "person cn_name";
+	d2rq:column "person.cn_name";
+	.
+map:person_fn_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personEnglishName;
+	d2rq:propertyDefinitionLabel "person fn_name";
+	d2rq:column "person.fn_name";
+	.
+map:person_gender a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personGender;
+	d2rq:propertyDefinitionLabel "person gender";
+	d2rq:column "person.gender";
+	.
+map:person_birthday a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personBirthday;
+	d2rq:propertyDefinitionLabel "person birthday";
+	d2rq:column "person.birthday";
+	.
+map:person_birthplace a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personBirthplace;
+	d2rq:propertyDefinitionLabel "person birthplace";
+	d2rq:column "person.birthplace";
+	.
+map:person_biography a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personBiography;
+	d2rq:propertyDefinitionLabel "person biography";
+	d2rq:column "person.biography";
+	.
+map:person_introduction a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personIntroduction;
+	d2rq:propertyDefinitionLabel "person introduction";
+	d2rq:column "person.introduction";
+	.
+map:person_occupation a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personOccupation;
+	d2rq:propertyDefinitionLabel "person occupation";
+	d2rq:column "person.occupation";
+	.
+map:person_more_cn_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personMoreCn;
+	d2rq:propertyDefinitionLabel "person more_cn_name";
+	d2rq:column "person.more_cn_name";
+	.
+map:person_more_fn_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:person;
+	d2rq:property :personMoreFn;
+	d2rq:propertyDefinitionLabel "person more_fn_name";
+	d2rq:column "person.more_fn_name";
+	.
+
+
+# Table region
+map:region a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "region/@@region.region_id@@";
+	d2rq:class vocab:region;
+	d2rq:classDefinitionLabel "region";
+	.
+map:region_region_name a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:region;
+	d2rq:property :regionName;
+	d2rq:propertyDefinitionLabel "region region_name";
+	d2rq:column "region.region_name";
+	.
 

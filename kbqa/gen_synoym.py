@@ -10,20 +10,23 @@ import traceback
 import pymysql
 from sklearn.externals import joblib
 
-data_path = 'data/synonym_data/'
+cur_path = os.path.dirname(os.path.abspath(__file__))
+data_path = os.path.abspath(os.path.join(cur_path, '..\\data\\synonym_data'))
+
 # 同义词映射文件
-MOVIE_SYNONYM_FILE = data_path + 'movie_synonym.txt'
-PERSON_SYNONYM_FILE = data_path + 'person_synonym.txt'
-GENRE_SYNONYM_FILE = data_path + 'genre_synonym.txt'
-LANGUAGE_SYNONYM_FILE = data_path + 'language_synonym.txt'
-REGION_SYNONYM_FILE = data_path + 'region_synonym.txt'
-YEAR_SYNONYM_FILE = data_path + 'year_synonym.txt'
+MOVIE_SYNONYM_FILE = '\\'.join([data_path, 'movie_synonym.txt'])
+PERSON_SYNONYM_FILE = '\\'.join([data_path, 'person_synonym.txt'])
+GENRE_SYNONYM_FILE = '\\'.join([data_path, 'genre_synonym.txt'])
+LANGUAGE_SYNONYM_FILE = '\\'.join([data_path, 'language_synonym.txt'])
+REGION_SYNONYM_FILE = '\\'.join([data_path, 'region_synonym.txt'])
+YEAR_SYNONYM_FILE = '\\'.join([data_path, 'year_synonym.txt'])
+
 # 持久化保存同义词典的map
-SYNONYM_DICT = data_path + 'synonym.pkl'
+SYNONYM_DICT = '\\'.join([data_path, 'synonym.pkl'])
 # 数据库提取的字段，用于后续训练词向量,需要绝对路径，不然文件会在mysql的目录下
 movie_description_file = 'F:/bsworkspace/server/auto_answer_for_movie/data/w2vdata/movie_description.txt'
 person_introduction_file = 'F:/bsworkspace/server/auto_answer_for_movie/data/w2vdata/person_introduction.txt'
-
+baike_info_file = 'F:/bsworkspace/server/auto_answer_for_movie/data/w2vdata/baike_info.txt'
 
 class DBDataHelper:
     """
@@ -104,9 +107,11 @@ class DBDataHelper:
         :return: 
         """
         sql = 'SELECT {field} FROM {table} where length({field})!=char_length({field}) into outfile "{file}"'
-        movie_sql = sql.format(field='description', table='movie', file=movie_description_file)
-        self.cursor.execute(movie_sql)
-        person_sql = sql.format(field='introduction', table='person', file=person_introduction_file)
+        # movie_sql = sql.format(field='description', table='movie', file=movie_description_file)
+        # self.cursor.execute(movie_sql)
+        # person_sql = sql.format(field='introduction', table='person', file=person_introduction_file)
+        # self.cursor.execute(person_sql)
+        person_sql = sql.format(field='description', table='baike_info', file=baike_info_file)
         self.cursor.execute(person_sql)
 
     @staticmethod
@@ -226,15 +231,3 @@ def re_build_synonym_dict():
     # DBDataHelper().gen_movie_name_map_file()    # 数据库获取数据生成别名映射
     # DBDataHelper().gen_person_name_map_file()
     SynonymUtils.generate_syn_dict()  # 根据别名映射文件生成新的dict
-
-
-# qq = '石岚和邝毅怡一起演过什么评分高于八点五分的搞笑类型的四川话的电影'
-# slots = {'genre': '搞笑', 'pers': ['石岚', '邝毅怡'], 'rate': '八点五', 'language': '四川话'}
-# q, s = SynonymUtils().rewrite_question(qq, slots)
-# print(qq)
-# print(q)
-# print(s)
-
-DBDataHelper().get_description_for_w2v_train()
-# SynonymUtils.generate_syn_dict()
-# print(SynonymUtils().synonym_dict['language'])

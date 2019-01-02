@@ -68,7 +68,7 @@ class Tagger:
 
 
 if __name__ == '__main__':
-    question = u"100零一夜评分高于8.5的电影"
+    question = u"长江7号的评分是多少"
     # words = jieba.cut(question)
     # for word in words:
     #

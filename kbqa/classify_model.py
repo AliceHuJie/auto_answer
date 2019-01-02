@@ -439,8 +439,8 @@ def compare_model(model_list):
 def compare_report(model_list, report=True, comfusion_matrix=False):
     for model in model_list:
         print('Model: ' + model)
+        y_true, y_preds, y_scores = read_predict_output(model)
         if report is True:
-            y_true, y_preds, y_scores = read_predict_output(model)
             if model in['cnn', 'cnn_w2v', 'lstm', 'lstm_w2v', 'mlp']:
                 print(metrics.classification_report(onehot_to_category(y_true), y_preds))
             else:
@@ -460,10 +460,10 @@ if __name__ == '__main__':
     # train_mlp()
     # train_nb_1()
     # train_nb_2()
-    train_svm_1()
+    # train_svm_1()
     # train_svm_2()
     # train_lr_1()
     # train_lr_2()
     # compare_model(model_name_list)
     # print(model_name_list[5:])
-    # compare_report(model_name_list)
+    compare_report(model_name_list)

@@ -182,7 +182,7 @@ def __fill_question(ques_temp):
     return question
 
 
-def __get_questions_for_w2vtrain():
+def get_questions_for_w2vtrain():
     """
     从tagged_data中取出问题那一列，保存到data/w2v/data中。就可以和其他的个人简介等内容，一起做分词和向量训练
     :return: 
@@ -197,29 +197,28 @@ def __get_questions_for_w2vtrain():
 
 def train_data_cut():
     """
-    先从tagged_data中提取问题，放入question.txt 。在对问题进行切词处理
+    把指定文件用来切词，用于后续的词向量训练.每个文件切词后单独保存，避免有的重切词导致所有重切词
+    后续合并文件用 windows的命令copy cut_*.txt all_cut.txt
     :return: 
     """
-    __get_questions_for_w2vtrain()  # 先提取出问题到
     tagger = Tagger()
     path = '../data/w2vdata/'
-    output_file = open(path + 'word_cut_data.txt', 'w+', encoding='utf-8')
-    # input_files = ['actor_introduction.txt', 'movie_introduction.txt', 'director_introduction.txt', 'questions.txt']
-    input_files = ['questions.txt']
+    input_files = ['movie_description.txt', 'person_introduction.txt', 'questions.txt', 'baike_info.txt']
     line_num = 0
-    for file_name in input_files:
+    for file_name in input_files[3:]:
         file = path + file_name
+        output_file = open(path + 'cut_' + file_name, 'w+', encoding='utf-8')
         with open(file, 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.replace('\\', '').replace(' ', '').strip()
                 if line != '':
                     line_num += 1
-                    print(line)
                     line_cut = tagger.get_cut_words(line)
                     text = ' '.join(line_cut)
+                    print(text)
                     output_file.write(text + '\n')
-    output_file.close()
-    print('total num :', line_num)
+        output_file.close()
+        print('total num :', line_num)
 
 
 def text2number(word_objects):
@@ -316,8 +315,10 @@ def __fill_and_annotation_question(ques_temp):
     letters = list(map(str, question))  # 每个字的列表
     return letters, labels
 
+
 if __name__ == '__main__':
-    generate_train_data(15)
+    # generate_train_data(15)
+    # get_questions_for_w2vtrain()
     # get_questions_for_w2vtrain()
     # gen_annotation_questions(10)
     # train_data_cut()
@@ -326,3 +327,4 @@ if __name__ == '__main__':
     # l, la = fill_and_annotation_question('ng类型，ll的电影有多少分数大于x')
     # print(l)
     # print(la)
+    train_data_cut()

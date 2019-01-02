@@ -33,7 +33,7 @@ class MovieSpider(Spider):
         logging.info('Movie Spider Start ...')
         for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
             c = parse.quote(country)
-            for year in year_list[0:5]:  # len(year_list)
+            for year in year_list[0:10]:  # len(year_list)
                 for page in range(0, 500):
                     # logging.warn('country:' + country + ' year:' + str(year) + ' page:' + str(page))
                     start = page * 20

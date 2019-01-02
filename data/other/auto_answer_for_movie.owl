@@ -23,22 +23,19 @@
     <Prefix name="xsd" IRI="http://www.w3.org/2001/XMLSchema#"/>
     <Prefix name="rdfs" IRI="http://www.w3.org/2000/01/rdf-schema#"/>
     <Declaration>
-        <Class IRI="#Actor"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#Country"/>
-    </Declaration>
-    <Declaration>
-        <Class IRI="#Director"/>
-    </Declaration>
-    <Declaration>
         <Class IRI="#Genre"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Language"/>
     </Declaration>
     <Declaration>
         <Class IRI="#Movie"/>
     </Declaration>
     <Declaration>
         <Class IRI="#Person"/>
+    </Declaration>
+    <Declaration>
+        <Class IRI="#Region"/>
     </Declaration>
     <Declaration>
         <ObjectProperty IRI="#containsMovie"/>
@@ -59,46 +56,67 @@
         <ObjectProperty IRI="#hasGenre"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="#showInCountry"/>
+        <ObjectProperty IRI="#hasLanguage"/>
     </Declaration>
     <Declaration>
-        <ObjectProperty IRI="#showMovie"/>
+        <ObjectProperty IRI="#hasWrite"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#countryName"/>
+        <ObjectProperty IRI="#hasWriter"/>
+    </Declaration>
+    <Declaration>
+        <ObjectProperty IRI="#showInRegion"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#genreName"/>
     </Declaration>
     <Declaration>
+        <DataProperty IRI="#languageName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#movieActors"/>
+    </Declaration>
+    <Declaration>
         <DataProperty IRI="#movieAlias"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#movieCover"/>
+        <DataProperty IRI="#movieDescription"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#movieDuration"/>
+        <DataProperty IRI="#movieDirectors"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#movieIntroduction"/>
+        <DataProperty IRI="#movieRate"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#movieRating"/>
+        <DataProperty IRI="#movieRatingNum"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#movieReleaseDate"/>
     </Declaration>
     <Declaration>
+        <DataProperty IRI="#movieRuntime"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#movieScenarists"/>
+    </Declaration>
+    <Declaration>
         <DataProperty IRI="#movieTitle"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#movieYear"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#personBiography"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#personBirthDay"/>
+        <DataProperty IRI="#personBirthPlace"/>
     </Declaration>
     <Declaration>
-        <DataProperty IRI="#personBirthPlace"/>
+        <DataProperty IRI="#personBirthday"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#personBirthplace"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#personDeathDay"/>
@@ -113,34 +131,23 @@
         <DataProperty IRI="#personIntroduction"/>
     </Declaration>
     <Declaration>
+        <DataProperty IRI="#personMoreCn"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#personMoreFn"/>
+    </Declaration>
+    <Declaration>
         <DataProperty IRI="#personName"/>
+    </Declaration>
+    <Declaration>
+        <DataProperty IRI="#personOccupation"/>
     </Declaration>
     <Declaration>
         <DataProperty IRI="#personPic"/>
     </Declaration>
     <Declaration>
-        <NamedIndividual IRI="#actor"/>
+        <DataProperty IRI="#regionName"/>
     </Declaration>
-    <SubClassOf>
-        <Class IRI="#Actor"/>
-        <Class IRI="#Person"/>
-    </SubClassOf>
-    <SubClassOf>
-        <Class IRI="#Director"/>
-        <Class IRI="#Person"/>
-    </SubClassOf>
-    <DisjointClasses>
-        <Class IRI="#Country"/>
-        <Class IRI="#Genre"/>
-    </DisjointClasses>
-    <DisjointClasses>
-        <Class IRI="#Country"/>
-        <Class IRI="#Movie"/>
-    </DisjointClasses>
-    <DisjointClasses>
-        <Class IRI="#Country"/>
-        <Class IRI="#Person"/>
-    </DisjointClasses>
     <DisjointClasses>
         <Class IRI="#Genre"/>
         <Class IRI="#Movie"/>
@@ -154,20 +161,20 @@
         <Class IRI="#Person"/>
     </DisjointClasses>
     <InverseObjectProperties>
-        <ObjectProperty IRI="#hasGenre"/>
         <ObjectProperty IRI="#containsMovie"/>
+        <ObjectProperty IRI="#hasGenre"/>
     </InverseObjectProperties>
     <InverseObjectProperties>
-        <ObjectProperty IRI="#hasActedIn"/>
         <ObjectProperty IRI="#hasActor"/>
+        <ObjectProperty IRI="#hasActedIn"/>
     </InverseObjectProperties>
     <InverseObjectProperties>
         <ObjectProperty IRI="#hasDirected"/>
         <ObjectProperty IRI="#hasDirector"/>
     </InverseObjectProperties>
     <InverseObjectProperties>
-        <ObjectProperty IRI="#showInCountry"/>
-        <ObjectProperty IRI="#showMovie"/>
+        <ObjectProperty IRI="#hasWriter"/>
+        <ObjectProperty IRI="#hasWrite"/>
     </InverseObjectProperties>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#containsMovie"/>
@@ -175,7 +182,7 @@
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#hasActedIn"/>
-        <Class IRI="#Actor"/>
+        <Class IRI="#Person"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#hasActor"/>
@@ -183,7 +190,7 @@
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#hasDirected"/>
-        <Class IRI="#Director"/>
+        <Class IRI="#Person"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
         <ObjectProperty IRI="#hasDirector"/>
@@ -194,12 +201,20 @@
         <Class IRI="#Movie"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
-        <ObjectProperty IRI="#showInCountry"/>
+        <ObjectProperty IRI="#hasLanguage"/>
         <Class IRI="#Movie"/>
     </ObjectPropertyDomain>
     <ObjectPropertyDomain>
-        <ObjectProperty IRI="#showMovie"/>
-        <Class IRI="#Country"/>
+        <ObjectProperty IRI="#hasWrite"/>
+        <Class IRI="#Person"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#hasWriter"/>
+        <Class IRI="#Movie"/>
+    </ObjectPropertyDomain>
+    <ObjectPropertyDomain>
+        <ObjectProperty IRI="#showInRegion"/>
+        <Class IRI="#Movie"/>
     </ObjectPropertyDomain>
     <ObjectPropertyRange>
         <ObjectProperty IRI="#containsMovie"/>
@@ -211,7 +226,7 @@
     </ObjectPropertyRange>
     <ObjectPropertyRange>
         <ObjectProperty IRI="#hasActor"/>
-        <Class IRI="#Actor"/>
+        <Class IRI="#Person"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
         <ObjectProperty IRI="#hasDirected"/>
@@ -219,46 +234,58 @@
     </ObjectPropertyRange>
     <ObjectPropertyRange>
         <ObjectProperty IRI="#hasDirector"/>
-        <Class IRI="#Director"/>
+        <Class IRI="#Person"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
         <ObjectProperty IRI="#hasGenre"/>
         <Class IRI="#Genre"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
-        <ObjectProperty IRI="#showInCountry"/>
-        <Class IRI="#Country"/>
+        <ObjectProperty IRI="#hasLanguage"/>
+        <Class IRI="#Language"/>
     </ObjectPropertyRange>
     <ObjectPropertyRange>
-        <ObjectProperty IRI="#showMovie"/>
+        <ObjectProperty IRI="#hasWrite"/>
         <Class IRI="#Movie"/>
     </ObjectPropertyRange>
-    <DataPropertyDomain>
-        <DataProperty IRI="#countryName"/>
-        <Class IRI="#Country"/>
-    </DataPropertyDomain>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#hasWriter"/>
+        <Class IRI="#Person"/>
+    </ObjectPropertyRange>
+    <ObjectPropertyRange>
+        <ObjectProperty IRI="#showInRegion"/>
+        <Class IRI="#Region"/>
+    </ObjectPropertyRange>
     <DataPropertyDomain>
         <DataProperty IRI="#genreName"/>
         <Class IRI="#Genre"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#languageName"/>
+        <Class IRI="#Language"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#movieActors"/>
+        <Class IRI="#Movie"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#movieAlias"/>
         <Class IRI="#Movie"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#movieCover"/>
+        <DataProperty IRI="#movieDescription"/>
         <Class IRI="#Movie"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#movieDuration"/>
+        <DataProperty IRI="#movieDirectors"/>
         <Class IRI="#Movie"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#movieIntroduction"/>
+        <DataProperty IRI="#movieRate"/>
         <Class IRI="#Movie"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#movieRating"/>
+        <DataProperty IRI="#movieRatingNum"/>
         <Class IRI="#Movie"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
@@ -266,7 +293,19 @@
         <Class IRI="#Movie"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
+        <DataProperty IRI="#movieRuntime"/>
+        <Class IRI="#Movie"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#movieScenarists"/>
+        <Class IRI="#Movie"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
         <DataProperty IRI="#movieTitle"/>
+        <Class IRI="#Movie"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#movieYear"/>
         <Class IRI="#Movie"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
@@ -274,11 +313,15 @@
         <Class IRI="#Person"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#personBirthDay"/>
+        <DataProperty IRI="#personBirthPlace"/>
         <Class IRI="#Person"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
-        <DataProperty IRI="#personBirthPlace"/>
+        <DataProperty IRI="#personBirthday"/>
+        <Class IRI="#Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#personBirthplace"/>
         <Class IRI="#Person"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
@@ -298,19 +341,39 @@
         <Class IRI="#Person"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
+        <DataProperty IRI="#personMoreCn"/>
+        <Class IRI="#Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#personMoreFn"/>
+        <Class IRI="#Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
         <DataProperty IRI="#personName"/>
+        <Class IRI="#Person"/>
+    </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#personOccupation"/>
         <Class IRI="#Person"/>
     </DataPropertyDomain>
     <DataPropertyDomain>
         <DataProperty IRI="#personPic"/>
         <Class IRI="#Person"/>
     </DataPropertyDomain>
+    <DataPropertyDomain>
+        <DataProperty IRI="#regionName"/>
+        <Class IRI="#Region"/>
+    </DataPropertyDomain>
     <DataPropertyRange>
-        <DataProperty IRI="#countryName"/>
+        <DataProperty IRI="#genreName"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#genreName"/>
+        <DataProperty IRI="#languageName"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#movieActors"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
@@ -318,23 +381,31 @@
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#movieCover"/>
+        <DataProperty IRI="#movieDescription"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#movieDuration"/>
+        <DataProperty IRI="#movieDirectors"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#movieIntroduction"/>
-        <Datatype abbreviatedIRI="xsd:string"/>
-    </DataPropertyRange>
-    <DataPropertyRange>
-        <DataProperty IRI="#movieRating"/>
+        <DataProperty IRI="#movieRate"/>
         <Datatype abbreviatedIRI="xsd:float"/>
     </DataPropertyRange>
     <DataPropertyRange>
+        <DataProperty IRI="#movieRatingNum"/>
+        <Datatype abbreviatedIRI="xsd:int"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
         <DataProperty IRI="#movieReleaseDate"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#movieRuntime"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#movieScenarists"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
@@ -342,15 +413,23 @@
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
+        <DataProperty IRI="#movieYear"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
         <DataProperty IRI="#personBiography"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#personBirthDay"/>
+        <DataProperty IRI="#personBirthPlace"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
-        <DataProperty IRI="#personBirthPlace"/>
+        <DataProperty IRI="#personBirthday"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#personBirthplace"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
@@ -370,11 +449,27 @@
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
+        <DataProperty IRI="#personMoreCn"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#personMoreFn"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
         <DataProperty IRI="#personName"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
     <DataPropertyRange>
+        <DataProperty IRI="#personOccupation"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
         <DataProperty IRI="#personPic"/>
+        <Datatype abbreviatedIRI="xsd:string"/>
+    </DataPropertyRange>
+    <DataPropertyRange>
+        <DataProperty IRI="#regionName"/>
         <Datatype abbreviatedIRI="xsd:string"/>
     </DataPropertyRange>
 </Ontology>
