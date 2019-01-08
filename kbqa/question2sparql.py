@@ -149,6 +149,7 @@ def fun_call(function_name, slots):
     return eval(function_name)(slots)  # 根据函数名动态调用
 
 
-question = '陈港生一七年演过的评分大于八点七的电影有哪些？'
+question = '电影KnightRider有哪些演员？'
+slot = Question2Sparql().get_slots(question)
 s = Question2Sparql().get_sparql(question)
 print(s)

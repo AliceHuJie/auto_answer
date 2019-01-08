@@ -102,11 +102,6 @@ def train_cnn_w2v_classify():
     y_preds = model.predict_classes(x_test)
     y_scores = model.predict(x_test)
     save_predict_output(y_test, y_preds, y_scores, 'cnn_w2c')
-    # 是否保存历史
-    # if save_history is True:
-    #     history_path = ''.join([model_path, 'word_vector_cnn_model.history'])
-    #     with open(history_path, 'wb') as handle:
-    #         pickle.dump(history, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 def train_lstm_classify():
@@ -464,6 +459,6 @@ if __name__ == '__main__':
     # train_svm_2()
     # train_lr_1()
     # train_lr_2()
-    # compare_model(model_name_list)
+    compare_model(model_name_list)
     # print(model_name_list[5:])
-    compare_report(model_name_list)
+    # compare_report(model_name_list)

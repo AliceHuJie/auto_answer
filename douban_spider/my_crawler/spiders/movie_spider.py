@@ -15,9 +15,9 @@ from douban_spider.my_crawler.items import *
 from douban_spider.my_crawler.settings import DEFAULT_REQUEST_HEADERS
 
 year_list = list(range(2018, 1990, -1))
-country_list = [u'中国大陆', u'美国', u'香港', u'台湾', u'日本', u'韩国', u'英国', u'法国', u'德国', u'意大利', u'西班牙', u'印度', u'泰国', u'俄罗斯',
+country_list = [u'中国大陆', u'美国', u'香港', u'台湾', u'英国', u'法国', u'德国', u'意大利', u'西班牙', u'印度', u'泰国', u'俄罗斯',
                 u'伊朗', u'加拿大',
-                u'澳大利亚', u'爱尔兰', u'瑞典', u'巴西', u'丹麦']
+                u'澳大利亚', u'爱尔兰', u'瑞典', u'巴西', u'丹麦', u'日本', u'韩国']
 
 
 class MovieSpider(Spider):
@@ -31,10 +31,10 @@ class MovieSpider(Spider):
     def start_requests(self):
         print('Movie Spider Start ...')
         logging.info('Movie Spider Start ...')
-        for country in country_list[:1]:  # 国家在前，先爬完一个国家所有年份的电影
+        for country in country_list[1:10]:  # 国家在前，先爬完一个国家所有年份的电影
             c = parse.quote(country)
-            for year in year_list[0:10]:  # len(year_list)
-                for page in range(0, 500):
+            for year in year_list:  # len(year_list)
+                for page in range(0, 300):
                     # logging.warn('country:' + country + ' year:' + str(year) + ' page:' + str(page))
                     start = page * 20
                     yield Request(self.film_listurl.format(tag=self.tag, country=c, year=year, page=start),
@@ -56,7 +56,7 @@ class MovieSpider(Spider):
                     id = film.get('id')  # 获取电影id
                     title = film.get('title')
                     # logging.getLogger(__name__).info("已获取电影id：%s %s" % (title, id))
-                    # print("已获取电影id：%s %s" % (title, id))
+                    print("已获取电影id：%s %s" % (title, id))
                     yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})
                     # id = 1297607
                     # yield Request(self.film_url.format(id=id), callback=self.parse_film, meta={'id': id})

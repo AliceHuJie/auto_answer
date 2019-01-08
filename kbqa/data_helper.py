@@ -17,7 +17,7 @@ from kbqa.word_tagging import Tagger
 
 MAX_SEQUENCE_LENGTH = 20  # 句子的最大长度，句子转ids时，长度不足的补0
 VALIDATION_SPLIT = 0  # 验证集的比例   训练集占0.8
-TEST_SPLIT = 0.2  # 测试集的比例
+TEST_SPLIT = 0.5  # 测试集的比例
 cur_path = os.path.dirname(os.path.abspath(__file__))
 TOKENIZER_SAVE_PATH = os.path.abspath(os.path.join(cur_path, '..\\data\\classify_data\\tokenizer.pickle'))    # 方式0使用
 TOKENIZER_SAVE_PATH1 = os.path.abspath(os.path.join(cur_path, '..\\data\\classify_data\\tokenizer1.pickle'))    # 方式1使用

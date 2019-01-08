@@ -155,7 +155,7 @@ class QuestionSet:
         if slots.get('movie') is not None:
             e = u"?m :hasActor ?a. ?a :personName ?o. "
             e = e + generic_movie_query(slots)
-                sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX, select=select, expression=e)
+            sparql = SPARQL_SELECT_TEM.format(prefix=SPARQL_PREXIX, select=select, expression=e)
         return sparql
 
     @staticmethod

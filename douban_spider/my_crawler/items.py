@@ -50,3 +50,10 @@ class TextItem(Item):
     id = Field()
     key = Field()
     description = Field()
+
+
+class MvItem(Item):
+    id = Field()
+    title = Field()
+    year = Field()
+    country = Field()

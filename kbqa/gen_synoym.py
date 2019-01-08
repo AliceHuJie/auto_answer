@@ -10,6 +10,8 @@ import traceback
 import pymysql
 from sklearn.externals import joblib
 
+from kbqa.utils.langconv import Converter
+
 cur_path = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.abspath(os.path.join(cur_path, '..\\data\\synonym_data'))
 
@@ -52,12 +54,22 @@ class DBDataHelper:
             for i in range(rows):
                 title, alias = self.cursor.fetchone()
                 title = str(title)
+
+                sentence = Converter('zh-hans').convert(title)
+                if sentence != title:  # 如果标题包含繁体字，建立一个简-》繁的映射
+                    line = sentence.strip() + '\t' + title.strip() + '\n'
+                    f.write(line)
+
                 alias = str(alias)
                 if alias is '':
                     continue
                 for alia in DBDataHelper.extract_contains_zh_str(alias):
                     line = alia.strip() + '\t' + title.strip() + '\n'
                     f.write(line)
+                    sentence = Converter('zh-hans').convert(alia)
+                    if sentence != alia:  # 如果别名包含繁体字，建立一个简-》繁的映射
+                        line = sentence.strip() + '\t' + title.strip() + '\n'
+                        f.write(line)
 
     def gen_person_name_map_file(self):
         sql = 'SELECT cn_name, more_cn_name FROM auto_answer_for_movie.person where length(cn_name)!=char_length(cn_name)'

@@ -3,9 +3,9 @@
 # @Author  : hujie
 # @Info  : 往jena服务器发起查询, 封装的一些查询函数
 
-from SPARQLWrapper import SPARQLWrapper, JSON
 from collections import OrderedDict
-import json
+
+from SPARQLWrapper import SPARQLWrapper, JSON
 
 
 class JenaFuseki:
@@ -56,7 +56,7 @@ class JenaFuseki:
             print()
             for qr in query_result:
                 for _, value in qr.items():
-                    print(value, ' ', end=' ')
+                    print(value, ' ')
                 print()
 
     def get_sparql_result_value(self, query_result):

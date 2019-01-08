@@ -22,17 +22,17 @@ NEWSPIDER_MODULE = 'my_crawler.spiders'
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 100
+CONCURRENT_REQUESTS = 20
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 2
-DOWNLOAD_TIMEOUT = 10
+# DOWNLOAD_DELAY = 1
+# DOWNLOAD_TIMEOUT = 10
 
 # The download delay setting will honor only one of:
-CONCURRENT_REQUESTS_PER_DOMAIN = 100
-CONCURRENT_REQUESTS_PER_IP = 100
+# CONCURRENT_REQUESTS_PER_DOMAIN = 1
+CONCURRENT_REQUESTS_PER_IP = 20
 
 # Disable cookies (enabled by default)
 COOKIES_ENABLED = False
@@ -70,7 +70,7 @@ DELTAFETCH_ENABLED = True
 DOWNLOADER_MIDDLEWARES = {
     'my_crawler.middlewares.RandomUserAgentMiddleware': 1,
     #    'my_crawler.middlewares.CookiesMiddleware': 554,
-    #     'my_crawler.middlewares.ProxyMiddleware': 555,
+    'my_crawler.middlewares.ProxyMiddleware': 555,
 }
 
 # Enable or disable extensions
@@ -89,7 +89,7 @@ ITEM_PIPELINES = {
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
-AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = False
 # The initial download delay
 AUTOTHROTTLE_START_DELAY = 5
 # The maximum download delay to be set in case of high latencies
@@ -124,6 +124,6 @@ MYSQL_USER = 'root'
 MYSQL_PASSWD = '2736'
 
 # 代理池API接口
-# PROXY_URL = 'http://localhost:5555/random'
+PROXY_URL = 'http://proxy.baibianip.com:8000'
 
 RETRY_HTTP_CODES = [302, 401, 403, 408, 414, 500, 502, 503, 504]

@@ -15,7 +15,7 @@ def rebuild_classify_data():
     """
     generate_all_question_temp()
     print('new all_question_temp.txt generated.\n')
-    times = 30
+    times = 50
     generate_train_data(times)
     print('new tagged_data.txt generated..\n')
     for i in range(3):
@@ -38,5 +38,5 @@ def rebuild_ner_data():
     print('you can rebuild ner model now...')
 
 
-# rebuild_classify_data()
-rebuild_ner_data()
+rebuild_classify_data()
+# rebuild_ner_data()

@@ -22,6 +22,7 @@ insert_movie_to_region_command = 'INSERT ignore INTO movie_to_region(`movie_id`,
 insert_movie_to_language_command = 'INSERT ignore INTO movie_to_language(`movie_id`,`language_name`)VALUES %s'
 
 insert_baike_info_command = 'REPLACE INTO baike_info(`id`,`key`,`description`) VALUES ({id}, "{key}", "{description}")'
+insert_movie_manager_command = 'INSERT INTO `auto_answer_for_movie`.`movie_crawer_manager`(`id`, `title`, `year`, `country`) VALUES ({id}, "{title}", "{year}", "{country}")'
 # 这几个表是后序生成的，不需要手工插入
 # insert_genre_command = 'insert ignore into genre (genre_name) values (%s)'
 # insert_region_command = 'insert ignore into region (region_name) values (%s)'
@@ -171,7 +172,7 @@ class MysqlPipeline(object):
                     self.cursor.execute(person_manager_insert_sql)
 
                 self.connect.commit()
-                print('save movie : %s' % movie_id)
+                # print('save movie : %s' % movie_id)
             except Exception as e:
                 logging.error('[MOVIE SPIDER]: ERROR IN INSERT MOVIE %s' % movie_id)
                 logging.error(traceback.print_exc(e))
@@ -204,6 +205,14 @@ class MysqlPipeline(object):
         elif spider.name == 'baike':
             try:
                 sql = insert_baike_info_command.format(id=item['id'], key=item['key'], description=item['description'])
+                self.cursor.execute(sql)
+                self.connect.commit()
+            except Exception as e:
+                logging.error(traceback.print_exc(e))
+        elif spider.name == 'movie_list':
+            try:
+                sql = insert_movie_manager_command.format(id=item['id'], title=item['title'], year=item['year'],
+                                                          country=item['country'])
                 self.cursor.execute(sql)
                 self.connect.commit()
             except Exception as e:

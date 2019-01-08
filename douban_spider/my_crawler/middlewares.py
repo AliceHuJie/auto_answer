@@ -1,6 +1,8 @@
 import logging
 import random
 
+from douban_spider.my_crawler import settings
+
 
 class RandomUserAgentMiddleware(object):
     def __init__(self):
@@ -59,3 +61,13 @@ class RandomUserAgentMiddleware(object):
         #         return cls(
         #             proxy_url=settings.get('PROXY_URL')
         #         )
+
+
+class ProxyMiddleware(object):
+    '''
+    设置Proxy
+    '''
+
+    def process_request(self, request, spider):
+        proxy = settings.PROXY_URL
+        request.meta['proxy'] = proxy

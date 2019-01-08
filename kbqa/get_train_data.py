@@ -203,9 +203,9 @@ def train_data_cut():
     """
     tagger = Tagger()
     path = '../data/w2vdata/'
-    input_files = ['movie_description.txt', 'person_introduction.txt', 'questions.txt', 'baike_info.txt']
+    input_files = ['questions.txt']
     line_num = 0
-    for file_name in input_files[3:]:
+    for file_name in input_files:
         file = path + file_name
         output_file = open(path + 'cut_' + file_name, 'w+', encoding='utf-8')
         with open(file, 'r', encoding='utf-8') as f:
